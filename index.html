@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Göz Simülatörü</title>
+<meta name="description" content="Miyopi, hipermetropi ve astigmatlı bir gözün gözlüklü ve gözlüksüz nasıl gördüğünü gösteren simülatör.">
+<meta name="theme-color" content="#0b1a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E👁️%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0b1a22; --panel:#11252f; --panel2:#163140; --line:#24485a;
+  --text:#e8f3f6; --muted:#9db8c2; --accent:#1fb5a8; --accent2:#ffc857;
+  --od:#ff8a65; --os:#64b5f6; --ok:#7bd88f; --warn:#ffb74d; --bad:#ef5350;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden;margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding-bottom:40px}
+button{font:inherit;color:inherit}
+h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.2px}
+header{display:flex;align-items:center;gap:10px;padding:10px 14px 6px}
+header .logo{width:30px;height:30px;border-radius:9px;background:var(--accent);display:grid;place-items:center;font-size:18px}
+header small{display:block;color:var(--muted);font-size:12px;font-weight:400}
+
+/* sahne */
+#sahneKap{position:sticky;top:0;z-index:5;background:var(--bg);padding:0 10px 6px}
+#tuval{position:relative;width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:#222;touch-action:none}
+#tuval canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.etiket{position:absolute;top:8px;padding:3px 8px;border-radius:8px;font-size:12px;font-weight:600;background:rgba(10,25,32,.78);color:#fff;pointer-events:none;max-width:48%}
+.etiket b{font-weight:700}
+#etA{left:8px} #etB{right:8px;text-align:right}
+.va{position:absolute;bottom:8px;padding:3px 8px;border-radius:8px;font-size:12.5px;font-weight:700;background:rgba(10,25,32,.82);pointer-events:none}
+#vaA{left:8px} #vaB{right:8px}
+#bolucu{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none;display:none}
+#bolucu::after{content:"⟷";position:absolute;top:50%;left:-17px;width:32px;height:32px;margin-top:-16px;border-radius:50%;background:#fff;color:#0b1a22;display:grid;place-items:center;font-weight:800;font-size:16px}
+#glHata{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:20px;color:#fff;background:#3a1d1d}
+
+.hizli{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.seg{min-width:0;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:2px;flex:1 1 auto}
+.seg button{flex:1;border:0;background:none;padding:7px 6px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--accent);color:#04201d}
+.seg button[data-v="R"].on{background:var(--od);color:#2a0d02}
+.seg button[data-v="L"].on{background:var(--os);color:#03182a}
+.tgl{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:7px 10px;font-size:13px;font-weight:650;color:var(--muted);white-space:nowrap}
+.tgl.on{background:var(--accent2);color:#2b1d00;border-color:var(--accent2)}
+#ozet{margin-top:7px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:8px 10px;font-size:13.2px;line-height:1.4;max-height:96px;overflow:auto}
+#ozet .od{color:var(--od);font-weight:700} #ozet .os{color:var(--os);font-weight:700}
+
+main{padding:4px 10px}
+.cips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none}
+.cips::-webkit-scrollbar{display:none}
+.cip{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.cip.on{background:var(--accent);color:#04201d;border-color:var(--accent)}
+.baslik{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:12px 2px 4px;font-weight:700}
+.mesafe{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-top:6px}
+.mesafe output{min-width:64px;font-weight:700;text-align:right}
+input[type=range]{flex:1;accent-color:var(--accent);height:28px}
+
+.sekmeler{display:flex;gap:4px;margin:14px 0 8px;background:var(--panel);border-radius:12px;padding:3px;border:1px solid var(--line)}
+.sekmeler button{flex:1;border:0;background:none;padding:9px 2px;border-radius:9px;font-size:13px;font-weight:650;color:var(--muted)}
+.sekmeler button.on{background:var(--panel2);color:var(--text);box-shadow:inset 0 -2px 0 var(--accent)}
+.sayfa{display:none} .sayfa.on{display:block}
+
+.kart{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.kart h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px}
+.nokta{width:10px;height:10px;border-radius:50%;display:inline-block}
+.kart.od h3 .nokta{background:var(--od)} .kart.os h3 .nokta{background:var(--os)}
+.satir{display:grid;grid-template-columns:78px minmax(0,1fr);align-items:center;gap:8px;margin:7px 0}
+.satir>*{min-width:0}
+.satir label{font-size:13px;color:var(--muted);font-weight:600}
+.adim{display:flex;align-items:center;gap:6px}
+.adim button{width:40px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);font-size:20px;font-weight:700;flex:0 0 auto}
+.adim input{flex:1;min-width:0;height:38px;border-radius:10px;border:1px solid var(--line);background:#0c1d26;color:var(--text);text-align:center;font-size:16px;font-weight:700}
+.aksSatir{display:flex;align-items:center;gap:8px}
+.aksSatir input[type=number]{width:62px;height:38px;border-radius:10px;border:1px solid var(--line);background:#0c1d26;color:var(--text);text-align:center;font-size:16px;font-weight:700}
+.tabo{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-top:2px}
+.tabo svg{flex:0 0 auto}
+.recete{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:var(--accent2);margin-top:4px}
+.dugmeler{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.dugme{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px 11px;font-size:13px;font-weight:600}
+.dugme.ana{background:var(--accent);color:#04201d;border-color:var(--accent)}
+select{width:100%;height:40px;border-radius:10px;border:1px solid var(--line);background:#0c1d26;color:var(--text);font:inherit;padding:0 8px}
+.not{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+.ac h4{margin:12px 0 4px;font-size:14px}
+.ac p,.ac li{font-size:13.6px;margin:4px 0}
+.ac ul{padding-left:18px;margin:4px 0}
+.rozet{display:inline-block;padding:1px 7px;border-radius:7px;font-size:12px;font-weight:700;margin-right:4px}
+.r-ok{background:rgba(123,216,143,.18);color:var(--ok)} .r-warn{background:rgba(255,183,77,.18);color:var(--warn)} .r-bad{background:rgba(239,83,80,.2);color:#ff8a87}
+table{width:100%;border-collapse:collapse;font-size:12.8px;margin-top:6px}
+th,td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:center}
+th{color:var(--muted);font-weight:650;font-size:12px}
+td:first-child,th:first-child{text-align:left}
+.bilgi h4{margin:14px 0 4px;color:var(--accent)}
+.bilgi p,.bilgi li{font-size:13.6px}
+.formul{font-family:ui-monospace,Consolas,monospace;background:#0c1d26;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12.5px;overflow-x:auto;white-space:nowrap}
+.gizli{display:none!important}
+/* masaüstü: solda görüntü, sağda ayarlar */
+@media (min-width:900px){
+  body{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,440px);column-gap:4px;max-width:1600px;margin:0 auto;align-items:start;padding-bottom:0}
+  header{grid-column:1/-1}
+  #sahneKap{grid-column:1;padding:0 6px 10px 14px}
+  #tuval{width:min(100%,calc((100vh - 200px)*4/3));margin:0 auto}
+  .hizli,#ozet{max-width:min(100%,calc((100vh - 200px)*4/3));margin-left:auto;margin-right:auto}
+  .hizli{margin-top:8px}
+  main{grid-column:2;position:sticky;top:0;max-height:calc(100vh - 56px);overflow:auto;padding:0 14px 20px 6px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">👁</div>
+  <div><h1>Göz Kırma Kusuru Simülatörü</h1><small>Miyopi · Hipermetropi · Astigmatizma · Presbiyopi</small></div>
+</header>
+
+<div id="sahneKap">
+  <div id="tuval">
+    <canvas id="gl"></canvas>
+    <div id="bolucu"></div>
+    <div class="etiket" id="etA"></div>
+    <div class="etiket gizli" id="etB"></div>
+    <div class="va" id="vaA"></div>
+    <div class="va gizli" id="vaB"></div>
+    <div id="glHata">Bu cihaz WebGL2 desteklemiyor; simülasyon çizilemiyor.</div>
+  </div>
+  <div class="hizli">
+    <div class="seg" id="gozSec">
+      <button data-v="R">Sağ göz</button><button data-v="L">Sol göz</button><button data-v="B">İki göz</button>
+    </div>
+    <button class="tgl" id="gozlukTgl">👓 Gözlük</button>
+    <button class="tgl" id="karsTgl">◧ Karşılaştır</button>
+  </div>
+  <div id="ozet"></div>
+</div>
+
+<main>
+  <div class="baslik">Sahne</div>
+  <div class="cips" id="sahneSec">
+    <button class="cip" data-v="esel">Eşel</button>
+    <button class="cip" data-v="kadran">Astigmat kadranı</button>
+    <button class="cip" data-v="okuma">Okuma kartı</button>
+    <button class="cip" data-v="sokak">Sokak</button>
+    <button class="cip" data-v="foto">📷 Fotoğraf</button>
+    <button class="cip" data-v="kamera">🎥 Canlı kamera</button>
+  </div>
+  <input type="file" id="dosya" accept="image/*" class="gizli">
+
+  <div class="baslik">Bakılan mesafe</div>
+  <div class="cips" id="mesafeSec">
+    <button class="cip" data-v="6">Uzak · 6 m</button>
+    <button class="cip" data-v="1">Orta · 1 m</button>
+    <button class="cip" data-v="0.4">Yakın · 40 cm</button>
+    <button class="cip" data-v="0.25">Çok yakın · 25 cm</button>
+  </div>
+  <div class="mesafe"><span>📏</span><input type="range" id="mesafeKaydir" min="0" max="1000" step="1"><output id="mesafeYaz"></output></div>
+
+  <div class="sekmeler" id="sekmeler">
+    <button data-v="goz" class="on">Göz</button>
+    <button data-v="gozluk">Gözlük</button>
+    <button data-v="aciklama">Açıklama</button>
+    <button data-v="ayar">Ayarlar</button>
+    <button data-v="bilgi">Bilgi</button>
+  </div>
+
+  <!-- GÖZ -->
+  <section class="sayfa on" id="s-goz">
+    <div class="kart">
+      <div class="satir"><label>Hazır örnek</label>
+        <select id="ornek"></select></div>
+      <div class="satir"><label>Yaş</label><div class="adim" data-yol="age" data-min="5" data-max="90" data-adim="1" data-bicim="yas"></div></div>
+      <div class="not" id="uyumNot"></div>
+    </div>
+    <div class="kart od" id="kartEyeR"></div>
+    <div class="kart os" id="kartEyeL"></div>
+    <div class="dugmeler">
+      <button class="dugme" data-kopya="eye:R>L">Sağ → Sol kopyala</button>
+      <button class="dugme" data-kopya="eye:L>R">Sol → Sağ kopyala</button>
+      <button class="dugme" data-sifirla="eye">İki gözü sıfırla</button>
+    </div>
+    <p class="not">Değerler reçetedeki gibi yazılır: Sfer (S), Silindir (C) ve Aks (TABO, 0–180°). Eksi silindir veya artı silindir yazılabilir; hesap ikisini de doğru işler.</p>
+  </section>
+
+  <!-- GÖZLÜK -->
+  <section class="sayfa" id="s-gozluk">
+    <div class="kart">
+      <div class="satir"><label>Lens türü</label>
+        <select id="lensTur"><option value="gozluk">Gözlük camı</option><option value="kontak">Kontak lens</option></select></div>
+      <div class="satir"><label>Kullanım</label>
+        <select id="lensKul">
+          <option value="uzak">Tek odaklı (uzak)</option>
+          <option value="okuma">Okuma gözlüğü (uzak + Add)</option>
+          <option value="progresif">Progresif / multifokal (mesafeye göre Add)</option>
+        </select></div>
+      <div class="satir" id="addSatir"><label>Add</label><div class="adim" data-yol="add" data-min="0" data-max="4" data-adim="0.25" data-bicim="d"></div></div>
+      <div class="satir"><label>Verteks</label><div class="adim" data-yol="vertex" data-min="0" data-max="20" data-adim="1" data-bicim="mm"></div></div>
+    </div>
+    <div class="kart od" id="kartLensR"></div>
+    <div class="kart os" id="kartLensL"></div>
+    <div class="dugmeler">
+      <button class="dugme ana" id="tamDuzelt">✓ Tam düzeltme (göz değerlerini al)</button>
+      <button class="dugme" id="sferikEs">Sferik eşdeğer ver</button>
+      <button class="dugme" id="eksik">Eksik düzelt (−0,50 az)</button>
+      <button class="dugme" data-sifirla="lens">Camları sıfırla</button>
+    </div>
+    <p class="not" id="lensNot"></p>
+  </section>
+
+  <!-- AÇIKLAMA -->
+  <section class="sayfa ac" id="s-aciklama"><div id="aciklama"></div></section>
+
+  <!-- AYARLAR -->
+  <section class="sayfa" id="s-ayar">
+    <div class="kart">
+      <div class="satir"><label>Pupil</label><div class="adim" data-yol="pupil" data-min="2" data-max="8" data-adim="0.5" data-bicim="mm"></div></div>
+      <div class="dugmeler">
+        <button class="dugme" data-pupil="2.5">Güneşli gün 2,5 mm</button>
+        <button class="dugme" data-pupil="4">İç mekân 4 mm</button>
+        <button class="dugme" data-pupil="6.5">Gece 6,5 mm</button>
+      </div>
+      <p class="not">Pupil büyüdükçe aynı derecedeki bulanıklık artar (gece görüşü daha kötüdür). Küçük pupil “iğne deliği” gibi davranır.</p>
+    </div>
+    <div class="kart">
+      <div class="satir"><label>Görüş açısı</label><div class="adim" data-yol="fovGecerli" data-min="5" data-max="90" data-adim="5" data-bicim="derece"></div></div>
+      <p class="not">Sokak, fotoğraf ve kamera sahnesinin ekrandaki genişliğinin gerçekte kaç dereceye karşılık geldiği. Küçük değer = sahne daha yakından/büyük görülüyor kabul edilir. Eşel, kadran ve okuma kartı açısal olarak kalibrelidir (1,0 satırı harf boyu 5 açı dakikası).</p>
+    </div>
+    <div class="kart">
+      <div class="satir"><label>Kalite</label>
+        <select id="kalite"><option value="96">Normal</option><option value="160">Yüksek</option><option value="48">Hızlı</option></select></div>
+      <p class="not">Yüksek kalite daha pürüzsüz bulanıklık verir; eski telefonlarda yavaş olabilir.</p>
+    </div>
+    <div class="dugmeler"><button class="dugme" id="hepsiSifir">Tüm ayarları sıfırla</button></div>
+  </section>
+
+  <!-- BİLGİ -->
+  <section class="sayfa bilgi" id="s-bilgi">
+    <div class="kart">
+      <h4>Bu uygulama ne yapar?</h4>
+      <p>İki göz için ayrı ayrı girilen kırma kusuru değerlerine (sfer, silindir, aks) göre kişinin dünyayı nasıl gördüğünü fiziksel optik hesapla canlandırır. Ardından gözlük ya da kontak lens değerleri girilerek düzeltilmiş görüş gösterilir. Tek göz ve iki göz görüşü, farklı bakış mesafeleri, yaşa bağlı uyum gücü ve pupil çapı hesaba katılır.</p>
+      <h4>Miyopi</h4>
+      <p>Gözün kırıcılığı eksen uzunluğuna göre fazladır; uzaktan gelen ışık retinanın önünde odaklanır. Uzak bulanık, yakın nettir. Uzak nokta = 100 / |derece| cm (örn. −2,00 D → 50 cm). Eksi (ıraksak) camla düzeltilir; gözlük camı görüntüyü küçültür.</p>
+      <h4>Hipermetropi</h4>
+      <p>Işık retinanın arkasında odaklanır. Genç kişiler uyum (akomodasyon) yaparak bunu kapatabilir; bu yüzden uzağı net görüp çabuk yorulabilirler. Uyum gücü yaşla azaldığından önce yakın, ileri yaşta uzak da bulanıklaşır. Artı (yakınsak) camla düzeltilir; cam görüntüyü büyütür.</p>
+      <h4>Astigmatizma</h4>
+      <p>Kornea/lens her yönde aynı eğrilikte değildir; iki ana meridyen farklı kırar. Bir yöndeki çizgiler net, ona dik çizgiler bulanık görülür; noktalar uzamış (elips) görünür. Silindirik camla düzeltilir. Eksi silindir aksı 180° civarı “kurala uygun”, 90° civarı “kurala aykırı”, diğerleri “oblik” astigmattır.</p>
+      <h4>Presbiyopi</h4>
+      <p>Yaşla göz merceğinin esnekliği azalır, uyum gücü düşer (Hofstetter ortalaması: 18,5 − 0,3 × yaş D). 40’lı yaşlardan sonra yakın görme zorlaşır; okuma ilavesi (Add) gerekir.</p>
+      <h4>Reçete yazımı ve TABO</h4>
+      <p><b>S</b> sfer, <b>C</b> silindir, <b>Aks</b> silindirin eksenidir (0–180°). Aks TABO sistemine göre, hastaya karşıdan bakan kişinin gözünden saat yönünün tersine ölçülür. Örnek: −1,00 −0,75 × 180. Transpozisyon: S’ = S + C, C’ = −C, Aks’ = Aks ± 90°. Sferik eşdeğer: SE = S + C/2.</p>
+      <h4>Hesap yöntemi</h4>
+      <ul>
+        <li><b>Güç vektörleri (Thibos):</b> M = S + C/2, J0 = −(C/2)·cos2α, J45 = −(C/2)·sin2α. Göz ile cam vektörel olarak çıkarılır; kalan (rezidüel) kusur bulunur. Böylece eğik akslı, yanlış akslı veya eksik camlar doğru hesaplanır.</li>
+        <li><b>Mesafe ve uyum:</b> Bakılan cismin vergensi 1/d eklenir; göz, uyum gücü kadar (0 … Amax) artı güç ekleyerek en az bulanıklık konumuna odaklanır.</li>
+        <li><b>Bulanıklık:</b> Geometrik optik ile bulanıklık açısı ≈ pupil çapı × defokus (mm × D = mrad). Her ana meridyende ayrı hesaplanır; nokta yayılımı bir elips olur ve görüntü bu elipsle evrişime (konvolüsyon) sokulur.</li>
+        <li><b>Görme keskinliği tahmini:</b> MAR ≈ √(1 + (0,57 · pupil · B)²), B = √(M² + J0² + J45²) bulanıklık şiddeti. Ondalık VA = 1 / MAR (en fazla 1,0).</li>
+        <li><b>Gözlük büyütmesi:</b> SM ≈ 1 / (1 − h·F), h = verteks + 3 mm. Silindirli camda iki meridyende farklı büyütme olur (şekil bozulması). Kontak lenste büyütme ihmal edilebilir.</li>
+        <li><b>Verteks dönüşümü:</b> F<sub>kontak</sub> = F<sub>gözlük</sub> / (1 − d·F<sub>gözlük</sub>).</li>
+        <li><b>İki göz:</b> Beyin daha net görüntüyü ağır basacak şekilde birleştirir (bulanıklık bastırması). Simülasyonda her göz görüntüsü 1/(bulanıklık²+1) ağırlığıyla karıştırılır. İki göz farkı (anizometropi) ve görüntü boyu farkı (aniseikoni) ayrıca raporlanır.</li>
+      </ul>
+      <h4>Sınırlamalar</h4>
+      <p>Bu bir eğitim simülasyonudur, tanı aracı değildir. Yüksek dereceli sapmalar (küresel sapma, koma), kırınım, renk sapması, katarakt/keratokonus gibi hastalıklar ve beynin bulanıklığa uyumu modellenmemiştir. Görme keskinliği değerleri yaklaşık tahmindir; telefon ekranının çözünürlüğü ve kullanıcının kendi görmesi sonucu etkiler (kendi gözlüğünüzle bakın).</p>
+      <h4>Proje önerisi için fikir</h4>
+      <p>Optisyenlik öğrencileri ve hastalara “reçete → görüş” ilişkisini öğretmede kullanılabilir. Örn. ön test / son test ile kavram öğrenimi ölçülebilir; tam düzeltme, eksik düzeltme, yanlış aks ve sferik eşdeğer gibi uygulamalar görsel olarak karşılaştırılabilir.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+"use strict";
+/* ========================= yardımcılar ========================= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const D2R = Math.PI / 180;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const ARCMIN_PER_MRAD = 3.43775;
+
+function fmtD(v) {
+  if (Math.abs(v) < 0.005) return "0,00";
+  return (v > 0 ? "+" : "−") + Math.abs(v).toFixed(2).replace(".", ",");
+}
+function fmtN(v, k = 2) { return v.toFixed(k).replace(".", ","); }
+function aksNorm(a) { a = Math.round(a) % 180; if (a <= 0) a += 180; return a; }
+function fmtRx(r) {
+  if (Math.abs(r.c) < 0.005) return Math.abs(r.s) < 0.005 ? "Plan (0,00)" : fmtD(r.s) + " DS";
+  return fmtD(r.s) + " " + fmtD(r.c) + " × " + aksNorm(r.a) + "°";
+}
+function transpoz(r) { return { s: r.s + r.c, c: -r.c, a: aksNorm(r.a > 90 ? r.a - 90 : r.a + 90) }; }
+const eksiSil = r => (r.c > 0 ? transpoz(r) : r);
+const artiSil = r => (r.c < 0 ? transpoz(r) : r);
+const yuvarla025 = v => Math.round(v * 4) / 4;
+
+/* güç vektörleri */
+function toPV(r) {
+  const t = 2 * r.a * D2R;
+  return { M: r.s + r.c / 2, J0: -(r.c / 2) * Math.cos(t), J45: -(r.c / 2) * Math.sin(t) };
+}
+function fromPV(p) {
+  const J = Math.hypot(p.J0, p.J45);
+  const c = -2 * J;
+  const s = p.M - c / 2;
+  let a = J < 1e-9 ? 180 : 0.5 * Math.atan2(p.J45, p.J0) / D2R;
+  a = ((a % 180) + 180) % 180;
+  if (a < 0.5) a = 180;
+  return { s: Math.round(s * 1000) / 1000, c: Math.round(c * 1000) / 1000, a };
+}
+const pvFark = (a, b) => ({ M: a.M - b.M, J0: a.J0 - b.J0, J45: a.J45 - b.J45 });
+/* lensi x metre göze doğru taşı (x<0: gözden uzaklaştır) */
+function verteksTasi(r, x) {
+  const m1 = r.s, m2 = r.s + r.c;
+  const f = F => F / (1 - x * F);
+  const n1 = f(m1), n2 = f(m2);
+  return { s: n1, c: n2 - n1, a: r.a };
+}
+
+/* ========================= durum ========================= */
+const VARSAYILAN = {
+  eye: { R: { s: -2, c: -1, a: 180 }, L: { s: -1.5, c: 0, a: 180 } },
+  lens: { R: { s: -2, c: -1, a: 180 }, L: { s: -1.5, c: 0, a: 180 } },
+  lensTur: "gozluk", lensKul: "uzak", add: 2, vertex: 12,
+  gozluk: false, goz: "B", kars: false, ayir: 0.5,
+  sahne: "esel", d: 6, age: 25, pupil: 4,
+  fov: { sokak: 30, foto: 45, kamera: 65 }, kalite: 96, sekme: "goz"
+};
+let S;
+try { S = Object.assign(JSON.parse(JSON.stringify(VARSAYILAN)), JSON.parse(localStorage.getItem("gozsim") || "{}")); }
+catch (e) { S = JSON.parse(JSON.stringify(VARSAYILAN)); }
+if (S.sahne === "kamera" || S.sahne === "foto") S.sahne = "esel";
+function kaydet() { try { localStorage.setItem("gozsim", JSON.stringify(S)); } catch (e) {} }
+
+const ORNEKLER = [
+  ["", "— Hazır örnek seç —"],
+  ["emetrop", "Normal göz (emetrop)", { R: [0, 0, 180], L: [0, 0, 180] }, 25],
+  ["hafifMiyop", "Hafif miyop (−1,25)", { R: [-1.25, 0, 180], L: [-1.25, 0, 180] }, 20],
+  ["ortaMiyop", "Orta miyop (−3,50 / −3,00)", { R: [-3.5, 0, 180], L: [-3, 0, 180] }, 22],
+  ["yuksekMiyop", "Yüksek miyop (−8,00)", { R: [-8, -0.5, 180], L: [-7.5, -0.75, 170] }, 30],
+  ["gencHiper", "Genç hipermetrop (+2,50, 12 yaş)", { R: [2.5, 0, 180], L: [2.5, 0, 180] }, 12],
+  ["yasliHiper", "Yaşlı hipermetrop (+2,50, 60 yaş)", { R: [2.5, 0, 180], L: [2.5, 0, 180] }, 60],
+  ["kuralUygun", "Kurala uygun astigmat (0 −2,00 × 180)", { R: [0, -2, 180], L: [0, -2, 180] }, 25],
+  ["kuralAykiri", "Kurala aykırı astigmat (0 −2,00 × 90)", { R: [0, -2, 90], L: [0, -2, 90] }, 25],
+  ["oblik", "Oblik astigmat (−1,00 −1,50 × 45 / 135)", { R: [-1, -1.5, 45], L: [-1, -1.5, 135] }, 25],
+  ["karisik", "Karışık astigmat (+1,00 −2,50 × 180)", { R: [1, -2.5, 180], L: [1, -2.5, 180] }, 25],
+  ["aniso", "Anizometropi (Sağ −1,00 / Sol −5,00)", { R: [-1, 0, 180], L: [-5, 0, 180] }, 25],
+  ["presbiyop", "Presbiyop (emetrop, 55 yaş)", { R: [0, 0, 180], L: [0, 0, 180] }, 55],
+  ["miyopPresb", "Miyop + presbiyop (−2,00, 52 yaş)", { R: [-2, -0.5, 180], L: [-2.25, 0, 180] }, 52]
+];
+
+/* ========================= optik hesap ========================= */
+function amax() { return Math.max(0.5, 18.5 - 0.3 * S.age); }
+
+function lensBilgi(k, d, addsiz) {
+  const L = S.lens[k];
+  let addE = 0;
+  if (addsiz) addE = 0;
+  else if (S.lensKul === "okuma") addE = S.add;
+  else if (S.lensKul === "progresif") addE = S.add * clamp((1 / d - 0.4) / (2.5 - 0.4), 0, 1);
+  const rx = { s: L.s + addE, c: L.c, a: L.a };          // lensin kendi gücü (Add dahil)
+  let spec = rx, h = (S.vertex + 3) / 1000;
+  if (S.lensTur === "kontak") { spec = verteksTasi(rx, -S.vertex / 1000); h = 0.003; }
+  return { rx, spec, addE, h };
+}
+
+/* k: "R"|"L", g: gözlük takılı mı, d: metre */
+function durum(k, g, d) {
+  const E = S.eye[k];
+  const pe = toPV(E);
+  let pr = pe, lens = null;
+  if (g) { lens = lensBilgi(k, d); pr = pvFark(pe, toPV(lens.spec)); }
+  const res = fromPV(pr);                    // uzak için kalan kusur
+  const A = amax();
+  const gerek = pr.M + 1 / d;                // net görmek için gereken uyum (SE'ye göre)
+  const uyum = clamp(gerek, 0, A);
+  const pf = { M: gerek - uyum, J0: pr.J0, J45: pr.J45 };
+  const eff = fromPV(pf);                    // retinadaki etkin defokus
+  const K = 0.5 * S.pupil * ARCMIN_PER_MRAD; // yarıçap (açı dakikası) / D
+  const ra = K * Math.abs(eff.s);            // aks yönündeki yayılım
+  const rb = K * Math.abs(eff.s + eff.c);    // aksa dik yayılım
+  const B = Math.hypot(pf.M, pf.J0, pf.J45);
+  const mar = Math.sqrt(1 + Math.pow(0.573 * S.pupil * B, 2));
+  const va = Math.min(1, 1 / mar);
+  let mag = { sa: 1, sb: 1, al: 0 };
+  if (lens) {
+    const m1 = lens.rx.s, m2 = lens.rx.s + lens.rx.c;
+    mag = { sa: 1 / (1 - lens.h * m1), sb: 1 / (1 - lens.h * m2), al: 180 - lens.rx.a };
+  }
+  return { k, g, d, E, res, pr, eff, gerek, uyum, A, ra, rb, al: 180 - eff.a, B, mar, va, mag, lens };
+}
+
+function vaYaz(va) {
+  if (va >= 0.95) return "1,0";
+  if (va >= 0.15) return fmtN(Math.round(va * 10) / 10, 1);
+  return fmtN(Math.max(0.01, Math.round(va * 100) / 100), 2);
+}
+function snellen(mar) {
+  const st = [6, 7.5, 9, 12, 15, 18, 24, 30, 36, 48, 60];
+  const x = 6 * mar;
+  if (x > 66) return "6/60’dan kötü";
+  let en = st[0];
+  for (const v of st) if (Math.abs(v - x) < Math.abs(en - x)) en = v;
+  return "6/" + String(en).replace(".", ",");
+}
+function vaSinif(va) {
+  if (va >= 0.9) return ["net", "r-ok"];
+  if (va >= 0.6) return ["hafif bulanık", "r-ok"];
+  if (va >= 0.3) return ["bulanık", "r-warn"];
+  if (va >= 0.1) return ["çok bulanık", "r-bad"];
+  return ["ileri derecede bulanık", "r-bad"];
+}
+function mesafeYaz(d) { return d >= 1 ? fmtN(d, d >= 3 ? 0 : 1).replace(",0", "") + " m" : Math.round(d * 100) + " cm"; }
+
+function yonAdi(b) {
+  const n = ((b % 180) + 180) % 180;
+  if (n < 22.5 || n >= 157.5) return "yatay";
+  if (n < 67.5) return "sağa yatık çapraz (/)";
+  if (n < 112.5) return "dikey";
+  return "sola yatık çapraz (\\)";
+}
+function saatCizgi(b) {
+  let h = Math.round(((3 - b / 30) % 12 + 12) % 12);
+  if (h === 0) h = 12;
+  const a = h > 6 ? h - 6 : h, z = a + 6;
+  return a + "–" + z;
+}
+
+function sinifla(r) {
+  const m1 = r.s, m2 = r.s + r.c, se = r.s + r.c / 2;
+  const kucuk = v => Math.abs(v) < 0.125;
+  let tip, derece = "";
+  const mc = eksiSil(r);
+  if (kucuk(r.c)) {
+    if (kucuk(r.s)) return { tip: "Emetrop (kırma kusuru yok)", kisa: "emetrop", se };
+    if (r.s < 0) { tip = "Miyopi"; derece = -r.s <= 3 ? "hafif" : -r.s <= 6 ? "orta" : "yüksek"; }
+    else { tip = "Hipermetropi"; derece = r.s <= 2 ? "hafif" : r.s <= 5 ? "orta" : "yüksek"; }
+    return { tip: derece + " " + tip.toLowerCase(), kisa: tip.toLowerCase(), se };
+  }
+  const lo = Math.min(m1, m2), hi = Math.max(m1, m2);
+  if (hi <= 0.125 && kucuk(hi)) tip = "basit miyopik astigmatizma";
+  else if (hi < 0) tip = "bileşik miyopik astigmatizma";
+  else if (lo >= -0.125 && kucuk(lo)) tip = "basit hipermetropik astigmatizma";
+  else if (lo > 0) tip = "bileşik hipermetropik astigmatizma";
+  else tip = "karışık (mikst) astigmatizma";
+  const cyl = Math.abs(r.c);
+  const cd = cyl <= 1 ? "hafif" : cyl <= 2 ? "orta" : cyl <= 3 ? "belirgin" : "yüksek";
+  const ax = mc.a;
+  const yon = (ax <= 30 || ax >= 150) ? "kurala uygun" : (ax >= 60 && ax <= 120) ? "kurala aykırı" : "oblik";
+  return { tip: cd + " " + tip + ", " + yon, kisa: tip, se, yon };
+}
+
+/* ========================= sahneler ========================= */
+const SW = 1200, SH = 900;
+const ESEL_P = 3.4;             // eşel/kadran/okuma: kaynak px / açı dakikası
+const sahneTuval = document.createElement("canvas");
+sahneTuval.width = SW; sahneTuval.height = SH;
+const sx = sahneTuval.getContext("2d");
+let fotoResim = null, video = null, kameraAkis = null;
+
+function rastgele(seed) { let x = seed; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
+
+function cizEsel() {
+  sx.fillStyle = "#fff"; sx.fillRect(0, 0, SW, SH);
+  const satirlar = [[0.1, 1], [0.2, 2], [0.3, 3], [0.4, 4], [0.5, 5], [0.6, 5], [0.7, 6], [0.8, 6], [0.9, 6], [1.0, 7]];
+  const harf = "CDHKNORSVZ", rnd = rastgele(2209);
+  let y = 24;
+  sx.textAlign = "center"; sx.textBaseline = "alphabetic";
+  for (const [va, n] of satirlar) {
+    const h = (5 / va) * ESEL_P;
+    y += h;
+    sx.fillStyle = "#111";
+    sx.font = "bold " + (h / 0.716).toFixed(1) + "px Arial, Helvetica, sans-serif";
+    const ara = h * 1.9, x0 = SW / 2 - ((n - 1) * ara) / 2;
+    for (let i = 0; i < n; i++) {
+      const c = va === 0.1 ? "E" : harf[Math.floor(rnd() * harf.length)];
+      sx.fillText(c, x0 + i * ara, y);
+    }
+    sx.fillStyle = "#8a8a8a"; sx.font = "600 24px Arial, sans-serif"; sx.textAlign = "left";
+    sx.fillText(fmtN(va, 1), 26, y - h / 2 + 9);
+    sx.textAlign = "right";
+    sx.fillText(snellen(1 / va), SW - 26, y - h / 2 + 9);
+    sx.textAlign = "center";
+    y += Math.max(h * 0.55, 15);
+  }
+}
+
+function cizKadran() {
+  sx.fillStyle = "#fff"; sx.fillRect(0, 0, SW, SH);
+  const cx = SW / 2, cy = SH / 2 + 10;
+  sx.strokeStyle = "#111"; sx.lineCap = "butt";
+  for (let i = 0; i < 6; i++) {
+    const a = i * 30 * D2R;
+    const dx = Math.cos(a), dy = Math.sin(a);
+    sx.lineWidth = 11;
+    sx.beginPath(); sx.moveTo(cx + dx * 55, cy + dy * 55); sx.lineTo(cx + dx * 345, cy + dy * 345); sx.stroke();
+    sx.beginPath(); sx.moveTo(cx - dx * 55, cy - dy * 55); sx.lineTo(cx - dx * 345, cy - dy * 345); sx.stroke();
+  }
+  sx.fillStyle = "#111"; sx.font = "bold 46px Arial, sans-serif"; sx.textAlign = "center"; sx.textBaseline = "middle";
+  for (let h = 1; h <= 12; h++) {
+    const a = (90 - h * 30) * D2R;
+    sx.fillText(String(h), cx + Math.cos(a) * 395, cy - Math.sin(a) * 395);
+  }
+  sx.beginPath(); sx.arc(cx, cy, 14, 0, Math.PI * 2); sx.fill();
+  sx.textBaseline = "alphabetic";
+}
+
+function sar(metin, maxW) {
+  const kel = metin.split(" "), sat = [];
+  let s = "";
+  for (const k of kel) {
+    const t = s ? s + " " + k : k;
+    if (sx.measureText(t).width > maxW && s) { sat.push(s); s = k; } else s = t;
+  }
+  if (s) sat.push(s);
+  return sat;
+}
+function cizOkuma() {
+  sx.fillStyle = "#fbf8f1"; sx.fillRect(0, 0, SW, SH);
+  const parcalar = [
+    [0.2, "Okuma kartı"],
+    [0.3, "Gözünüzü sevin, koruyun."],
+    [0.4, "Düzenli göz muayenesi önemlidir."],
+    [0.5, "Kitap okurken ışığın yeterli olmasına dikkat edin."],
+    [0.63, "Ekrana uzun süre bakarken ara sıra uzağa bakmak gözleri dinlendirir ve kuruluğu azaltır."],
+    [0.8, "Optisyen, hekimin yazdığı reçeteye göre camı seçer, merkezler ve çerçeveye takar. Doğru merkezleme net ve rahat görüş sağlar."],
+    [1.0, "Kırk yaşından sonra yakın görme zorlaşır; buna presbiyopi denir. Okuma gözlüğü ya da progresif cam ile yakındaki yazılar yeniden net görülebilir. Gözlüğünüzü düzenli kontrol ettirin."]
+  ];
+  let y = 26;
+  sx.textAlign = "left"; sx.textBaseline = "alphabetic";
+  for (const [va, t] of parcalar) {
+    const h = (5 / va) * ESEL_P, fs = h / 0.716;
+    sx.font = fs.toFixed(1) + "px Georgia, 'Times New Roman', serif";
+    const satir = sar(t, SW - 150);
+    for (let i = 0; i < satir.length; i++) {
+      y += fs * (i === 0 ? 1.0 : 1.22);
+      sx.fillStyle = "#1a1a1a"; sx.fillText(satir[i], 118, y);
+      if (i === 0) { sx.fillStyle = "#9a8f80"; sx.font = "600 22px Arial, sans-serif"; sx.fillText(fmtN(va, va === 0.63 ? 2 : 1), 24, y - h / 2 + 8); sx.font = fs.toFixed(1) + "px Georgia, 'Times New Roman', serif"; }
+    }
+    y += fs * 0.42;
+  }
+}
+
+function yuvarlakDik(x, y, w, h, r) {
+  sx.beginPath(); sx.moveTo(x + r, y); sx.arcTo(x + w, y, x + w, y + h, r); sx.arcTo(x + w, y + h, x, y + h, r);
+  sx.arcTo(x, y + h, x, y, r); sx.arcTo(x, y, x + w, y, r); sx.closePath();
+}
+function cizSokak() {
+  let g = sx.createLinearGradient(0, 0, 0, 520);
+  g.addColorStop(0, "#6fb4f2"); g.addColorStop(1, "#d9efff");
+  sx.fillStyle = g; sx.fillRect(0, 0, SW, 520);
+  sx.fillStyle = "#fff6c4"; sx.beginPath(); sx.arc(1060, 90, 46, 0, 7); sx.fill();
+  sx.fillStyle = "rgba(255,255,255,.85)";
+  for (const [x, y, s] of [[180, 80, 1], [520, 60, 0.8], [800, 120, 0.7]]) {
+    sx.beginPath(); sx.arc(x, y, 28 * s, 0, 7); sx.arc(x + 32 * s, y - 12 * s, 34 * s, 0, 7); sx.arc(x + 70 * s, y, 26 * s, 0, 7); sx.fill();
+  }
+  sx.fillStyle = "#7e9fb5";
+  sx.beginPath(); sx.moveTo(0, 380); sx.lineTo(160, 300); sx.lineTo(330, 360); sx.lineTo(520, 280); sx.lineTo(760, 370); sx.lineTo(980, 300); sx.lineTo(1200, 350); sx.lineTo(1200, 520); sx.lineTo(0, 520); sx.fill();
+  const binalar = [[0, 230, 190, "#c9a27e"], [190, 300, 170, "#d8d2c4"], [360, 190, 210, "#b5806a"], [570, 260, 180, "#e3d7b8"], [750, 210, 220, "#9fb2a8"], [970, 280, 230, "#d1b49a"]];
+  for (const [x, y, w, c] of binalar) {
+    sx.fillStyle = c; sx.fillRect(x, y, w, 520 - y);
+    sx.fillStyle = "rgba(40,60,80,.75)";
+    for (let wy = y + 22; wy < 430; wy += 46) for (let wx = x + 18; wx < x + w - 30; wx += 40) sx.fillRect(wx, wy, 22, 28);
+  }
+  // saat kulesi
+  sx.fillStyle = "#fff"; sx.beginPath(); sx.arc(465, 235, 30, 0, 7); sx.fill();
+  sx.strokeStyle = "#222"; sx.lineWidth = 3; sx.stroke();
+  for (let i = 0; i < 12; i++) { const a = i * 30 * D2R; sx.lineWidth = 2; sx.beginPath(); sx.moveTo(465 + Math.cos(a) * 24, 235 + Math.sin(a) * 24); sx.lineTo(465 + Math.cos(a) * 28, 235 + Math.sin(a) * 28); sx.stroke(); }
+  sx.lineWidth = 3; sx.beginPath(); sx.moveTo(465, 235); sx.lineTo(465, 213); sx.moveTo(465, 235); sx.lineTo(481, 241); sx.stroke();
+  // tabelalar
+  function tabela(x, y, w, h, renk, yazi, fs, yr = "#fff") { sx.fillStyle = renk; sx.fillRect(x, y, w, h); sx.fillStyle = yr; sx.font = "bold " + fs + "px Arial, sans-serif"; sx.textAlign = "center"; sx.textBaseline = "middle"; sx.fillText(yazi, x + w / 2, y + h / 2 + 1); }
+  tabela(15, 440, 160, 44, "#1e8e3e", "ECZANE", 30);
+  sx.fillStyle = "#fff"; sx.fillRect(152, 450, 8, 24); sx.fillRect(144, 458, 24, 8);
+  tabela(205, 455, 130, 36, "#7a4a24", "FIRIN", 24);
+  tabela(585, 445, 150, 40, "#1565c0", "OPTİK", 28);
+  sx.strokeStyle = "#fff"; sx.lineWidth = 3; sx.beginPath(); sx.arc(705, 465, 7, 0, 7); sx.moveTo(729, 465); sx.arc(722, 465, 7, 0, 7); sx.stroke();
+  tabela(990, 300, 200, 30, "#fff", "Hayat net görünce güzel", 15, "#333");
+  tabela(770, 440, 180, 30, "#c62828", "İNDİRİM %50", 18);
+  // kaldırım ve yol
+  sx.fillStyle = "#bdbdbd"; sx.fillRect(0, 520, SW, 70);
+  sx.fillStyle = "#9e9e9e"; for (let x = 0; x < SW; x += 60) sx.fillRect(x, 520, 2, 70);
+  g = sx.createLinearGradient(0, 590, 0, SH); g.addColorStop(0, "#5b5b5b"); g.addColorStop(1, "#3a3a3a");
+  sx.fillStyle = g; sx.fillRect(0, 590, SW, SH - 590);
+  sx.fillStyle = "#f5f5f5"; for (let x = 20; x < SW; x += 150) sx.fillRect(x, 735, 80, 9);
+  sx.fillStyle = "#e0e0e0"; for (let x = 60; x < 360; x += 50) sx.fillRect(x, 610, 30, 110);
+  // trafik ışığı
+  sx.fillStyle = "#333"; sx.fillRect(398, 330, 10, 260); sx.fillRect(380, 300, 46, 110);
+  for (const [cy, c] of [[318, "#ff3b30"], [354, "#5a4a00"], [390, "#1b3d1b"]]) { sx.fillStyle = c; sx.beginPath(); sx.arc(403, cy, 13, 0, 7); sx.fill(); }
+  // DUR
+  sx.fillStyle = "#777"; sx.fillRect(1120, 430, 9, 170);
+  sx.fillStyle = "#d32f2f"; sx.beginPath();
+  for (let i = 0; i < 8; i++) { const a = (22.5 + i * 45) * D2R; sx.lineTo(1124 + Math.cos(a) * 58, 400 + Math.sin(a) * 58); }
+  sx.closePath(); sx.fill(); sx.strokeStyle = "#fff"; sx.lineWidth = 4; sx.stroke();
+  sx.fillStyle = "#fff"; sx.font = "bold 36px Arial, sans-serif"; sx.textAlign = "center"; sx.textBaseline = "middle"; sx.fillText("DUR", 1124, 402);
+  // durak tabelası
+  sx.fillStyle = "#777"; sx.fillRect(1012, 470, 6, 120);
+  tabela(970, 470, 90, 26, "#00897b", "OTOBÜS", 15);
+  tabela(970, 496, 90, 40, "#fff", "15 · 22 · 41", 12, "#222");
+  sx.fillStyle = "#222"; sx.font = "10px Arial"; sx.fillText("Kadıköy – Üsküdar", 1015, 528);
+  // sokak tabelası
+  tabela(430, 545, 150, 30, "#1a3d8f", "Gözlük Sk. No:7", 15);
+  // ağaç
+  sx.fillStyle = "#6d4c41"; sx.fillRect(892, 440, 18, 150);
+  sx.fillStyle = "#2e7d32"; for (const [x, y, r] of [[900, 420, 55], [860, 450, 40], [945, 450, 42], [900, 380, 40]]) { sx.beginPath(); sx.arc(x, y, r, 0, 7); sx.fill(); }
+  // araba
+  sx.fillStyle = "#c62828"; yuvarlakDik(520, 700, 340, 95, 26); sx.fill();
+  sx.beginPath(); sx.moveTo(585, 702); sx.lineTo(630, 640); sx.lineTo(760, 640); sx.lineTo(810, 702); sx.fill();
+  sx.fillStyle = "#b3e5fc"; sx.beginPath(); sx.moveTo(605, 700); sx.lineTo(638, 654); sx.lineTo(690, 654); sx.lineTo(690, 700); sx.fill();
+  sx.beginPath(); sx.moveTo(700, 700); sx.lineTo(700, 654); sx.lineTo(752, 654); sx.lineTo(788, 700); sx.fill();
+  sx.fillStyle = "#111"; for (const x of [600, 780]) { sx.beginPath(); sx.arc(x, 795, 36, 0, 7); sx.fill(); sx.fillStyle = "#aaa"; sx.beginPath(); sx.arc(x, 795, 14, 0, 7); sx.fill(); sx.fillStyle = "#111"; }
+  sx.fillStyle = "#fff"; sx.fillRect(640, 752, 120, 28); sx.strokeStyle = "#222"; sx.lineWidth = 2; sx.strokeRect(640, 752, 120, 28);
+  sx.fillStyle = "#1a3d8f"; sx.fillRect(640, 752, 14, 28);
+  sx.fillStyle = "#111"; sx.font = "bold 17px Arial"; sx.fillText("34 GZ 2209", 706, 767);
+  sx.fillStyle = "#ffeb3b"; sx.beginPath(); sx.arc(848, 730, 9, 0, 7); sx.fill();
+  sx.textAlign = "left"; sx.textBaseline = "alphabetic";
+}
+function cizFoto() {
+  sx.fillStyle = "#222"; sx.fillRect(0, 0, SW, SH);
+  if (!fotoResim) {
+    sx.fillStyle = "#ccc"; sx.font = "600 40px Arial"; sx.textAlign = "center";
+    sx.fillText("Fotoğraf seçmek için 📷 Fotoğraf’a dokunun", SW / 2, SH / 2); sx.textAlign = "left"; return;
+  }
+  const r = Math.max(SW / fotoResim.width, SH / fotoResim.height);
+  const w = fotoResim.width * r, h = fotoResim.height * r;
+  sx.drawImage(fotoResim, (SW - w) / 2, (SH - h) / 2, w, h);
+}
+function sahneCiz() {
+  ({ esel: cizEsel, kadran: cizKadran, okuma: cizOkuma, sokak: cizSokak, foto: cizFoto })[S.sahne === "kamera" ? "foto" : S.sahne]();
+}
+function sahneP(texW) {
+  if (S.sahne === "esel" || S.sahne === "kadran" || S.sahne === "okuma") return ESEL_P;
+  return texW / (S.fov[S.sahne] * 60);
+}
+function arkaRenk() { return S.sahne === "okuma" ? [0.96, 0.94, 0.89] : (S.sahne === "esel" || S.sahne === "kadran") ? [1, 1, 1] : [0.12, 0.12, 0.12]; }
+
+/* ========================= WebGL ========================= */
+const cv = $("#gl");
+const gl = cv.getContext("webgl2", { antialias: false, preserveDrawingBuffer: true, alpha: false });
+let prog, tex, U = {}, texW = SW, texH = SH, rect = [0, 0, SW, SH];
+const VS = `#version 300 es
+void main(){ vec2 p=vec2(float((gl_VertexID<<1)&2), float(gl_VertexID&2)); gl_Position=vec4(p*2.0-1.0,0.0,1.0); }`;
+const FS = `#version 300 es
+precision highp float;
+uniform sampler2D uTex; uniform vec2 uTexSize; uniform vec4 uRect; uniform vec4 uVp; uniform vec3 uBg;
+uniform mat2 uK0,uK1,uM0,uM1; uniform float uW0,uW1,uLod0,uLod1,uR0,uR1; uniform int uN;
+out vec4 o;
+vec3 tap(vec2 p,float lod){ vec2 uv=p/uTexSize; if(uv.x<0.0||uv.y<0.0||uv.x>1.0||uv.y>1.0) return uBg; vec3 c=textureLod(uTex,uv,lod).rgb; return c*c; }
+vec3 goz(vec2 p,mat2 K,mat2 M,float lod,float rad){
+  vec2 c=uRect.xy+uRect.zw*0.5; vec2 q=c+M*(p-c);
+  if(rad<0.6) return tap(q,0.0);
+  vec3 a=vec3(0.0); float n=float(uN);
+  for(int i=0;i<256;i++){ if(i>=uN) break; float fi=float(i)+0.5; float r=sqrt(fi/n); float t=fi*2.39996323;
+    a+=tap(q+K*(vec2(cos(t),sin(t))*r),lod); }
+  return a/n;
+}
+void main(){
+  vec2 f=(gl_FragCoord.xy-uVp.xy)/uVp.zw; f.y=1.0-f.y;
+  vec2 p=uRect.xy+f*uRect.zw;
+  vec3 col=vec3(0.0); float ws=0.0;
+  if(uW0>0.0){ col+=uW0*goz(p,uK0,uM0,uLod0,uR0); ws+=uW0; }
+  if(uW1>0.0){ col+=uW1*goz(p,uK1,uM1,uLod1,uR1); ws+=uW1; }
+  col/=max(ws,1e-5);
+  o=vec4(sqrt(col),1.0);
+}`;
+function glKur() {
+  if (!gl) { $("#glHata").style.display = "grid"; return false; }
+  const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+  prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+  for (const n of ["uTex", "uTexSize", "uRect", "uVp", "uBg", "uK0", "uK1", "uM0", "uM1", "uW0", "uW1", "uLod0", "uLod1", "uR0", "uR1", "uN"]) U[n] = gl.getUniformLocation(prog, n);
+  gl.bindVertexArray(gl.createVertexArray());
+  tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.uniform1i(U.uTex, 0);
+  return true;
+}
+function dokuYukle(kaynak, w, h) {
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, kaynak);
+  gl.generateMipmap(gl.TEXTURE_2D);
+  texW = w; texH = h;
+  if (w / h > 4 / 3) { const vw = h * 4 / 3; rect = [(w - vw) / 2, 0, vw, h]; }
+  else { const vh = w * 3 / 4; rect = [0, (h - vh) / 2, w, vh]; }
+}
+
+/* bir göz için çekirdek matrisleri */
+function gozParam(c, P, olcek) {
+  const a = c.al * D2R, ux = Math.cos(a), uy = -Math.sin(a), vx = Math.sin(a), vy = Math.cos(a);
+  const ra = c.ra * P, rb = c.rb * P;
+  const K = [ux * ra, uy * ra, vx * rb, vy * rb];
+  const b = c.mag.al * D2R, mx = Math.cos(b), my = -Math.sin(b), nx = Math.sin(b), ny = Math.cos(b);
+  const ia = 1 / c.mag.sa, ib = 1 / c.mag.sb;
+  const m00 = mx * mx * ia + nx * nx * ib, m01 = mx * my * ia + nx * ny * ib, m11 = my * my * ia + ny * ny * ib;
+  const M = [m00, m01, m01, m11];
+  const rmax = Math.max(ra, rb);
+  return { K, M, rmax, ra, rb };
+}
+function lodHesap(g, N) {
+  const ara = Math.max(Math.sqrt(Math.PI * g.ra * g.rb / N), 2 * g.rmax / N) * olcekGoruntu;
+  return Math.max(0, Math.log2(Math.max(ara, 1e-6)) - 0.4);
+}
+let olcekGoruntu = 1;
+
+function panelDurumlari(gozluk) {
+  const d = S.d, R = durum("R", gozluk, d), L = durum("L", gozluk, d);
+  if (S.goz === "R") return { liste: [[R, 1]], R, L };
+  if (S.goz === "L") return { liste: [[L, 1]], R, L };
+  const bl = c => Math.sqrt((c.ra * c.ra + c.rb * c.rb) / 2);
+  const wR = 1 / (bl(R) ** 2 + 1), wL = 1 / (bl(L) ** 2 + 1);
+  return { liste: [[R, wR], [L, wL]], R, L };
+}
+
+function cizPanel(pd, N, P, vp) {
+  const e = pd.liste;
+  const g0 = gozParam(e[0][0], P), g1 = e[1] ? gozParam(e[1][0], P) : g0;
+  gl.uniformMatrix2fv(U.uK0, false, g0.K); gl.uniformMatrix2fv(U.uM0, false, g0.M);
+  gl.uniformMatrix2fv(U.uK1, false, g1.K); gl.uniformMatrix2fv(U.uM1, false, g1.M);
+  gl.uniform1f(U.uW0, e[0][1]); gl.uniform1f(U.uW1, e[1] ? e[1][1] : 0);
+  gl.uniform1f(U.uR0, g0.rmax); gl.uniform1f(U.uR1, g1.rmax);
+  gl.uniform1f(U.uLod0, lodHesap(g0, N)); gl.uniform1f(U.uLod1, lodHesap(g1, N));
+  gl.uniform4f(U.uVp, vp[0], vp[1], vp[2], vp[3]);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+let taslak = false, bekliyor = false, bosTimer = 0, sonCizim = null;
+function iste(t) {
+  if (t) { taslak = true; clearTimeout(bosTimer); bosTimer = setTimeout(() => { taslak = false; iste(false); }, 260); }
+  if (!bekliyor) { bekliyor = true; requestAnimationFrame(() => { bekliyor = false; ciz(); }); }
+}
+function boyutla() {
+  const r = $("#tuval").getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  const w = Math.round(Math.min(1400, r.width * dpr)), h = Math.round(w * 3 / 4);
+  if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+}
+function ciz() {
+  if (!gl) return;
+  boyutla();
+  const kamera = S.sahne === "kamera";
+  if (kamera) {
+    if (!video || video.readyState < 2) return;
+    dokuYukle(video, video.videoWidth, video.videoHeight);
+  }
+  const N = kamera ? Math.min(40, S.kalite) : (taslak ? 28 : S.kalite);
+  const P = sahneP(texW);
+  olcekGoruntu = Math.max(1, rect[2] / cv.width);
+  gl.viewport(0, 0, cv.width, cv.height);
+  gl.uniform2f(U.uTexSize, texW, texH);
+  gl.uniform4f(U.uRect, rect[0], rect[1], rect[2], rect[3]);
+  const bg = arkaRenk(); gl.uniform3f(U.uBg, bg[0] * bg[0], bg[1] * bg[1], bg[2] * bg[2]);
+  gl.uniform1i(U.uN, N);
+  const vp = [0, 0, cv.width, cv.height];
+  if (S.kars) {
+    const x = Math.round(cv.width * S.ayir);
+    gl.enable(gl.SCISSOR_TEST);
+    gl.scissor(0, 0, x, cv.height); cizPanel(panelDurumlari(false), N, P, vp);
+    gl.scissor(x, 0, cv.width - x, cv.height); cizPanel(panelDurumlari(true), N, P, vp);
+    gl.disable(gl.SCISSOR_TEST);
+  } else {
+    gl.disable(gl.SCISSOR_TEST);
+    cizPanel(panelDurumlari(S.gozluk), N, P, vp);
+  }
+}
+
+/* ========================= kamera / foto ========================= */
+let kameraDongu = 0;
+async function kameraBaslat() {
+  try {
+    kameraAkis = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 960 } }, audio: false });
+    video = document.createElement("video");
+    video.playsInline = true; video.muted = true; video.srcObject = kameraAkis;
+    await video.play();
+    const dongu = () => { if (S.sahne !== "kamera") return; ciz(); kameraDongu = requestAnimationFrame(dongu); };
+    dongu();
+  } catch (e) {
+    alert("Kamera açılamadı: " + (e && e.message ? e.message : e));
+    sahneSec("esel");
+  }
+}
+function kameraDurdur() {
+  cancelAnimationFrame(kameraDongu);
+  if (kameraAkis) kameraAkis.getTracks().forEach(t => t.stop());
+  kameraAkis = null; video = null;
+}
+window.uygulamaDurdu = () => { if (S.sahne === "kamera") { kameraDurdur(); sahneSec("esel"); } };
+window.geriTusu = () => false;
+
+$("#dosya").addEventListener("change", e => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  const img = new Image();
+  img.onload = () => { fotoResim = img; S.sahne = "foto"; sahneYenile(); };
+  img.src = URL.createObjectURL(f);
+});
+
+function sahneSec(v) {
+  if (S.sahne === "kamera" && v !== "kamera") kameraDurdur();
+  if (v === "foto") { $("#dosya").value = ""; $("#dosya").click(); if (!fotoResim) { S.sahne = "foto"; sahneYenile(); } return; }
+  const once = S.sahne;
+  S.sahne = v;
+  if (v !== once) {
+    if (v === "okuma" && S.d > 1) S.d = 0.4;
+    if ((v === "esel" || v === "kadran") && S.d < 1) S.d = 6;
+  }
+  if (v === "kamera") { arayuz(); kameraBaslat(); return; }
+  sahneYenile();
+}
+function sahneYenile() {
+  if (S.sahne !== "kamera") { sahneCiz(); if (gl) dokuYukle(sahneTuval, SW, SH); }
+  guncelle();
+}
+
+/* ========================= arayüz ========================= */
+function yolAl(y) { return y.split(".").reduce((o, k) => o[k], S); }
+function yolYaz(y, v) { const p = y.split("."), son = p.pop(); p.reduce((o, k) => o[k], S)[son] = v; }
+function biçim(v, b) {
+  if (b === "yas") return v + " yaş";
+  if (b === "mm") return fmtN(v, v % 1 ? 1 : 0) + " mm";
+  if (b === "derece") return v + "°";
+  return fmtD(v);
+}
+function sayiOku(s) { const v = parseFloat(String(s).replace(/[−–]/g, "-").replace(",", ".").replace(/[^\d.+-]/g, "")); return isNaN(v) ? null : v; }
+
+function adimKur(el) {
+  const y = el.dataset.yol, mn = +el.dataset.min, mx = +el.dataset.max, ad = +el.dataset.adim, b = el.dataset.bicim;
+  el.innerHTML = '<button type="button">−</button><input inputmode="decimal"><button type="button">+</button>';
+  const [eks, inp, art] = el.children;
+  const al = () => (y === "fovGecerli" ? S.fov[fovAnahtar()] : yolAl(y));
+  const yaz = v => { v = clamp(Math.round(v / ad) * ad, mn, mx); if (y === "fovGecerli") S.fov[fovAnahtar()] = v; else yolYaz(y, v); guncelle(true); };
+  el._goster = () => { if (document.activeElement !== inp) inp.value = biçim(al(), b); };
+  let tekrar;
+  const bas = d => { yaz(al() + d * ad); tekrar = setTimeout(function f() { yaz(al() + d * ad); tekrar = setTimeout(f, 90); }, 450); };
+  const birak = () => clearTimeout(tekrar);
+  for (const [btn, d] of [[eks, -1], [art, 1]]) {
+    btn.addEventListener("pointerdown", e => { e.preventDefault(); bas(d); });
+    ["pointerup", "pointerleave", "pointercancel"].forEach(t => btn.addEventListener(t, birak));
+  }
+  inp.addEventListener("focus", () => { inp.value = String(al()).replace(".", ","); setTimeout(() => inp.select(), 0); });
+  inp.addEventListener("change", () => { const v = sayiOku(inp.value); if (v !== null) yaz(v); inp.blur(); el._goster(); });
+  inp.addEventListener("blur", () => el._goster());
+}
+function fovAnahtar() { return S.sahne === "sokak" || S.sahne === "foto" || S.sahne === "kamera" ? S.sahne : "sokak"; }
+
+function taboSvg(a, renk) {
+  const r = 30, cx = 36, cy = 36, t = a * D2R;
+  const x1 = cx + Math.cos(t) * r, y1 = cy - Math.sin(t) * r;
+  return `<svg width="72" height="42" viewBox="0 0 72 42"><path d="M6 36 A30 30 0 0 1 66 36" fill="none" stroke="#3d6474" stroke-width="2"/>
+  <line x1="6" y1="36" x2="66" y2="36" stroke="#3d6474" stroke-width="1"/>
+  <text x="2" y="41" font-size="8" fill="#7f9ca7">180</text><text x="62" y="41" font-size="8" fill="#7f9ca7">0</text><text x="31" y="5" font-size="8" fill="#7f9ca7">90</text>
+  <line x1="${cx}" y1="${cy}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${renk}" stroke-width="3" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="${renk}"/></svg>`;
+}
+function rxKart(el, grup, k) {
+  const ad = k === "R" ? "Sağ göz (OD)" : "Sol göz (OS)";
+  const bas = grup === "eye" ? ad + " · gözün değeri" : ad + " · cam";
+  el.innerHTML = `<h3><span class="nokta"></span>${bas}</h3>
+  <div class="satir"><label>Sfer (S)</label><div class="adim" data-yol="${grup}.${k}.s" data-min="-20" data-max="20" data-adim="0.25"></div></div>
+  <div class="satir"><label>Silindir (C)</label><div class="adim" data-yol="${grup}.${k}.c" data-min="-8" data-max="8" data-adim="0.25"></div></div>
+  <div class="satir"><label>Aks</label><div class="aksSatir"><input type="range" min="1" max="180" step="1" data-aks="${grup}.${k}.a"><input type="number" min="0" max="180" data-aksn="${grup}.${k}.a"></div></div>
+  <div class="tabo" data-tabo="${grup}.${k}"></div>
+  <div class="recete" data-recete="${grup}.${k}"></div>`;
+}
+for (const g of ["eye", "lens"]) for (const k of ["R", "L"]) rxKart($("#kart" + (g === "eye" ? "Eye" : "Lens") + k), g, k);
+$$(".adim").forEach(adimKur);
+$$("[data-aks]").forEach(el => el.addEventListener("input", () => { yolYaz(el.dataset.aks, +el.value); guncelle(true); }));
+$$("[data-aksn]").forEach(el => el.addEventListener("change", () => { const v = sayiOku(el.value); if (v !== null) { yolYaz(el.dataset.aksn, aksNorm(clamp(v, 0, 180))); guncelle(); } }));
+
+const ornekSel = $("#ornek");
+ornekSel.innerHTML = ORNEKLER.map(o => `<option value="${o[0]}">${o[1]}</option>`).join("");
+ornekSel.addEventListener("change", () => {
+  const o = ORNEKLER.find(x => x[0] === ornekSel.value);
+  if (!o || !o[2]) return;
+  for (const k of ["R", "L"]) { const [s, c, a] = o[2][k]; S.eye[k] = { s, c, a }; S.lens[k] = { s, c, a }; }
+  S.age = o[3];
+  S.add = clamp(yuvarla025(o[3] < 40 ? 0 : (o[3] - 40) / 20 * 2 + 0.75), 0, 3);
+  S.lensKul = o[3] >= 45 ? "progresif" : "uzak";
+  S.gozluk = false;
+  guncelle();
+  setTimeout(() => (ornekSel.value = ""), 400);
+});
+
+$("#gozSec").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.goz = b.dataset.v; guncelle(); } });
+$("#gozlukTgl").addEventListener("click", () => { if (S.kars) S.kars = false; S.gozluk = !S.gozluk; guncelle(); });
+$("#karsTgl").addEventListener("click", () => { S.kars = !S.kars; guncelle(); });
+$("#sahneSec").addEventListener("click", e => { const b = e.target.closest("button"); if (b) sahneSec(b.dataset.v); });
+$("#mesafeSec").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.d = +b.dataset.v; guncelle(); } });
+const MIN_D = 0.2, MAX_D = 8;
+const kaydirToD = v => MIN_D * Math.pow(MAX_D / MIN_D, v / 1000);
+const dToKaydir = d => Math.round(1000 * Math.log(d / MIN_D) / Math.log(MAX_D / MIN_D));
+$("#mesafeKaydir").addEventListener("input", e => { let d = kaydirToD(+e.target.value); d = d < 1 ? Math.round(d * 100) / 100 : Math.round(d * 10) / 10; S.d = d; guncelle(true); });
+$("#sekmeler").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.sekme = b.dataset.v; arayuz(); kaydet(); } });
+$("#lensTur").addEventListener("change", e => { S.lensTur = e.target.value; guncelle(); });
+$("#lensKul").addEventListener("change", e => { S.lensKul = e.target.value; guncelle(); });
+$("#kalite").addEventListener("change", e => { S.kalite = +e.target.value; guncelle(); });
+$$("[data-pupil]").forEach(b => b.addEventListener("click", () => { S.pupil = +b.dataset.pupil; guncelle(); }));
+$$("[data-kopya]").forEach(b => b.addEventListener("click", () => { const [g, yon] = b.dataset.kopya.split(":"); const [a, z] = yon.split(">"); S[g][z] = Object.assign({}, S[g][a]); guncelle(); }));
+$$("[data-sifirla]").forEach(b => b.addEventListener("click", () => { const g = b.dataset.sifirla; for (const k of ["R", "L"]) S[g][k] = { s: 0, c: 0, a: 180 }; guncelle(); }));
+$("#tamDuzelt").addEventListener("click", () => {
+  for (const k of ["R", "L"]) {
+    let r = Object.assign({}, S.eye[k]);
+    if (S.lensTur === "kontak") { r = verteksTasi(r, S.vertex / 1000); r = { s: yuvarla025(r.s), c: yuvarla025(r.c), a: r.a }; }
+    S.lens[k] = r;
+  }
+  S.gozluk = true; guncelle();
+});
+$("#sferikEs").addEventListener("click", () => {
+  for (const k of ["R", "L"]) { const e = S.eye[k]; let se = e.s + e.c / 2; if (S.lensTur === "kontak") se = se / (1 - S.vertex / 1000 * se); S.lens[k] = { s: yuvarla025(se), c: 0, a: 180 }; }
+  S.gozluk = true; guncelle();
+});
+$("#eksik").addEventListener("click", () => {
+  for (const k of ["R", "L"]) { const e = S.eye[k], se = e.s + e.c / 2; S.lens[k] = { s: e.s - Math.sign(se || -1) * 0.5, c: e.c, a: e.a }; }
+  S.gozluk = true; guncelle();
+});
+$("#hepsiSifir").addEventListener("click", () => { if (confirm("Tüm değerler varsayılana dönsün mü?")) { const sh = S.sahne; S = JSON.parse(JSON.stringify(VARSAYILAN)); S.sahne = sh === "kamera" ? "kamera" : sh === "foto" ? "foto" : "esel"; sahneYenile(); } });
+
+/* karşılaştırma bölücüsü */
+const tuvalEl = $("#tuval");
+let surukle = false;
+function ayirAyarla(e) { const r = tuvalEl.getBoundingClientRect(); S.ayir = clamp((e.clientX - r.left) / r.width, 0.05, 0.95); bolucuGoster(); iste(); }
+tuvalEl.addEventListener("pointerdown", e => { if (!S.kars) return; surukle = true; tuvalEl.setPointerCapture(e.pointerId); ayirAyarla(e); });
+tuvalEl.addEventListener("pointermove", e => { if (surukle) ayirAyarla(e); });
+["pointerup", "pointercancel"].forEach(t => tuvalEl.addEventListener(t, () => { surukle = false; kaydet(); }));
+function bolucuGoster() { const b = $("#bolucu"); b.style.display = S.kars ? "block" : "none"; b.style.left = (S.ayir * 100) + "%"; }
+
+/* ========================= metinler ========================= */
+const gozAdi = k => (k === "R" ? '<span class="od">Sağ göz</span>' : '<span class="os">Sol göz</span>');
+function cizgiNotu(c) {
+  if (Math.abs(c.ra - c.rb) < 1.2 || Math.max(c.ra, c.rb) < 1.5) return "";
+  const netYon = c.ra < c.rb ? c.al + 90 : c.al;
+  return ` ${yonAdi(netYon)[0].toUpperCase() + yonAdi(netYon).slice(1)} çizgiler daha net, ${yonAdi(netYon + 90)} çizgiler daha bulanık (kadranda en net: ${saatCizgi(netYon)}).`;
+}
+function uyumNotu(c) {
+  if (c.gerek > c.A + 0.12) return ` Uyum yetmiyor (gereken ${fmtN(c.gerek)} D, en fazla ${fmtN(c.A)} D).`;
+  if (c.uyum > 0.75 && c.uyum > c.A * 0.6) return ` Net görmek için uyumunun büyük kısmını (${fmtN(c.uyum)}/${fmtN(c.A)} D) kullanıyor; uzun süre bakınca yorulur.`;
+  return "";
+}
+function kisaOzet(c) {
+  const [s] = vaSinif(c.va);
+  return `${gozAdi(c.k)} ${c.g ? "gözlükle" : "gözlüksüz"}, ${mesafeYaz(c.d)}: ${s} (≈${vaYaz(c.va)}).` + cizgiNotu(c) + uyumNotu(c);
+}
+function netAralik(pr, A) {
+  const tol = 0.25, M = pr.M;
+  const uzakV = -M - tol, yakinV = A - M + tol;
+  if (yakinV <= Math.max(0, uzakV)) return "hiçbir mesafede tam net değil";
+  const uz = uzakV <= 0 ? "sonsuz" : mesafeYaz(1 / uzakV);
+  const yk = mesafeYaz(1 / yakinV);
+  return `${yk} ile ${uz} arası`;
+}
+function binokulerVA(R, L) {
+  const b = Math.max(R.va, L.va), w = Math.min(R.va, L.va);
+  return (b - w < 0.15) ? Math.min(1, b * 1.08) : b;
+}
+
+function gozMetni(k) {
+  const E = S.eye[k], s = sinifla(E), A = amax();
+  const c0 = durum(k, false, S.d), c1 = durum(k, true, S.d);
+  const m1 = E.s, m2 = E.s + E.c;
+  let h = `<h4>${gozAdi(k)}: ${fmtRx(E)}</h4>`;
+  h += `<p><b>Tanı:</b> ${s.tip[0].toUpperCase() + s.tip.slice(1)}. Sferik eşdeğer ${fmtD(s.se)} D.`;
+  if (Math.abs(E.c) > 0.1) h += ` Transpozisyon: <b>${fmtRx(transpoz(E))}</b>. Ana meridyenler: ${fmtD(m1)} D (${aksNorm(E.a)}°) ve ${fmtD(m2)} D (${aksNorm(E.a + 90)}°).`;
+  h += `</p>`;
+  const fp = [];
+  for (const m of [m1, m2]) if (m < -0.12) fp.push(Math.round(100 / -m) + " cm");
+  if (fp.length) h += `<p><b>Uzak nokta:</b> ${[...new Set(fp)].join(" ve ")}. Bundan uzaktaki cisimler gözlüksüz bulanık.</p>`;
+  if (s.se > 0.12) h += `<p><b>Hipermetropi:</b> uzağı görmek için bile ${fmtN(s.se)} D uyum gerekir (yaşa göre uyum gücü ≈ ${fmtN(A)} D). ${s.se <= A * 0.6 ? "Genç gözde gizli kalabilir; yakın çalışmada yorgunluk, baş ağrısı yapabilir." : s.se <= A ? "Uyum zorlanarak yetiyor; uzun süre yakın çalışmak yorucu." : "Uyum yetmiyor; uzak da bulanık."}</p>`;
+  h += `<p><b>Gözlüksüz net görme aralığı:</b> ${netAralik(c0.pr, A)}.</p>`;
+  const [ss, sr] = vaSinif(c0.va);
+  h += `<p><span class="rozet ${sr}">Gözlüksüz ${vaYaz(c0.va)} · ${snellen(c0.mar)}</span> ${mesafeYaz(S.d)} mesafede ${ss}.${cizgiNotu(c0)}${uyumNotu(c0)}</p>`;
+  if (Math.abs(s.se) >= 4) {
+    const cl = verteksTasi(E, S.vertex / 1000);
+    h += `<p class="not">Kontak lens eşdeğeri (verteks ${S.vertex} mm): ${fmtRx({ s: yuvarla025(cl.s), c: yuvarla025(cl.c), a: E.a })}.</p>`;
+  }
+  // gözlük
+  const L = c1.lens, lu = lensBilgi(k, S.d, true), prU = pvFark(toPV(E), toPV(lu.spec)), res = fromPV(prU);
+  h += `<p><b>${S.lensTur === "kontak" ? "Kontak lens" : "Gözlük camı"}:</b> ${fmtRx(S.lens[k])}${L.addE > 0.01 ? ` + Add ${fmtD(L.addE)} (bu mesafede)` : ""}.`;
+  const rB = Math.hypot(prU.M, prU.J0, prU.J45);
+  if (rB < 0.13) h += ` Uzak için <b>tam düzeltme</b>.`;
+  else {
+    h += ` Uzak için kalan kusur: <b>${fmtRx(res)}</b>.`;
+    if (prU.M < -0.12) h += " Eksik düzeltme (miyopik kalıyor).";
+    else if (prU.M > 0.12) h += (E.s + E.c / 2 < 0 ? " Aşırı eksi (fazla düzeltme): genç göz uyumla kapatır ama yorulur." : " Hipermetropi eksik düzeltilmiş; uyumla kapatmaya çalışır.");
+    if (Math.hypot(prU.J0, prU.J45) > 0.2) h += " Astigmat tam düzeltilmemiş" + (Math.abs(E.c) > 0.2 && Math.abs(S.lens[k].c) > 0.2 && Math.abs(aksNorm(eksiSil(E).a) - aksNorm(eksiSil(S.lens[k]).a)) > 2 ? " (aks farkı yeni bir silindir oluşturuyor)" : "") + ".";
+  }
+  h += `</p>`;
+  const [gs, gr] = vaSinif(c1.va);
+  h += `<p><span class="rozet ${gr}">Gözlükle ${vaYaz(c1.va)} · ${snellen(c1.mar)}</span> ${mesafeYaz(S.d)} mesafede ${gs}.${cizgiNotu(c1)}${uyumNotu(c1)}</p>`;
+  const sa = c1.mag.sa, sb = c1.mag.sb;
+  const yuz = v => (v >= 1 ? "%" + fmtN((v - 1) * 100, 1) + " büyütür" : "%" + fmtN((1 - v) * 100, 1) + " küçültür");
+  if (Math.abs(sa - 1) > 0.004 || Math.abs(sb - 1) > 0.004) {
+    if (Math.abs(sa - sb) < 0.004) h += `<p class="not">Cam görüntüyü ${yuz(sa)}.</p>`;
+    else h += `<p class="not">Cam görüntüyü ${aksNorm(L.rx.a)}° yönünde ${yuz(sa)}, ${aksNorm(L.rx.a + 90)}° yönünde ${yuz(sb)}; şekiller hafif basık/uzun görünür (alışma süresi gerekebilir).</p>`;
+  }
+  return h;
+}
+
+function tabloMetni() {
+  const mes = [[6, "6 m"], [1, "1 m"], [0.4, "40 cm"]];
+  let h = `<h4>Mesafeye göre tahmini görme keskinliği</h4><table><tr><th>Mesafe</th><th>Sağ<br>gözlüksüz</th><th>Sağ<br>gözlükle</th><th>Sol<br>gözlüksüz</th><th>Sol<br>gözlükle</th><th>İki göz<br>gözlükle</th></tr>`;
+  for (const [d, ad] of mes) {
+    const a = durum("R", false, d), b = durum("R", true, d), c = durum("L", false, d), e = durum("L", true, d);
+    const hc = x => `<td><span class="rozet ${vaSinif(x.va)[1]}">${vaYaz(x.va)}</span></td>`;
+    const bi = binokulerVA(b, e);
+    h += `<tr><td>${ad}</td>${hc(a)}${hc(b)}${hc(c)}${hc(e)}<td><span class="rozet ${vaSinif(bi)[1]}">${vaYaz(bi)}</span></td></tr>`;
+  }
+  return h + `</table><p class="not">Ondalık görme keskinliği (1,0 = tam). Pupil ${fmtN(S.pupil, 1)} mm, yaş ${S.age}.</p>`;
+}
+
+function iki_gozMetni() {
+  const R = durum("R", false, S.d), L = durum("L", false, S.d), Rg = durum("R", true, S.d), Lg = durum("L", true, S.d);
+  const seR = S.eye.R.s + S.eye.R.c / 2, seL = S.eye.L.s + S.eye.L.c / 2, fark = Math.abs(seR - seL);
+  let h = `<h4>İki göz birlikte</h4>`;
+  h += `<p><span class="rozet ${vaSinif(binokulerVA(R, L))[1]}">Gözlüksüz ≈${vaYaz(binokulerVA(R, L))}</span> <span class="rozet ${vaSinif(binokulerVA(Rg, Lg))[1]}">Gözlükle ≈${vaYaz(binokulerVA(Rg, Lg))}</span> (${mesafeYaz(S.d)})</p>`;
+  h += `<p>İki göz açıkken beyin daha net olan gözün görüntüsünü öne çıkarır; iki göz eşit netse görüş tek gözden biraz daha iyidir (binoküler toplanma).</p>`;
+  if (fark >= 1) h += `<p><b>Anizometropi:</b> iki göz arasında ${fmtN(fark)} D fark var. ${fark >= 2 ? "Gözlükle görüntü boyu farkı (aniseikoni) rahatsızlık yapabilir; kontak lens daha uygun olabilir. Çocuklarda tembel göz riski." : "Genelde tolere edilir."}</p>`;
+  const bR = Math.sqrt(Rg.mag.sa * Rg.mag.sb), bL = Math.sqrt(Lg.mag.sa * Lg.mag.sb);
+  const ani = Math.abs(bR - bL) * 100;
+  if (ani >= 0.5) h += `<p><b>Aniseikoni (gözlükle):</b> iki gözdeki görüntü boyu farkı ≈ %${fmtN(ani, 1)}. ${ani >= 3 ? "%3’ün üstü genelde şikâyet yapar (çift görme hissi, baş ağrısı)." : "Genelde sorun olmaz."}</p>`;
+  if (Math.abs(R.va - L.va) > 0.35 && S.gozluk === false) h += `<p>Gözler çok farklı görüyor: iki gözle bakınca simülasyonda net göz baskın gelir, bulanık göz görüntüye hafif “hale” ekler.</p>`;
+  return h;
+}
+
+/* ========================= güncelleme ========================= */
+function arayuz() {
+  $$("#gozSec button").forEach(b => b.classList.toggle("on", b.dataset.v === S.goz));
+  $$("#sahneSec button").forEach(b => b.classList.toggle("on", b.dataset.v === S.sahne));
+  $$("#mesafeSec button").forEach(b => b.classList.toggle("on", Math.abs(+b.dataset.v - S.d) < 0.001));
+  $$("#sekmeler button").forEach(b => b.classList.toggle("on", b.dataset.v === S.sekme));
+  $$(".sayfa").forEach(s => s.classList.toggle("on", s.id === "s-" + S.sekme));
+  $("#gozlukTgl").classList.toggle("on", S.gozluk && !S.kars);
+  $("#karsTgl").classList.toggle("on", S.kars);
+  const mk = $("#mesafeKaydir"); if (document.activeElement !== mk) mk.value = dToKaydir(clamp(S.d, MIN_D, MAX_D));
+  $("#mesafeYaz").textContent = mesafeYaz(S.d);
+  $("#lensTur").value = S.lensTur; $("#lensKul").value = S.lensKul; $("#kalite").value = String(S.kalite);
+  $("#addSatir").style.display = S.lensKul === "uzak" ? "none" : "";
+  $$(".adim").forEach(el => el._goster && el._goster());
+  $$("[data-aks]").forEach(el => { if (document.activeElement !== el) el.value = aksNorm(yolAl(el.dataset.aks)); });
+  $$("[data-aksn]").forEach(el => { if (document.activeElement !== el) el.value = aksNorm(yolAl(el.dataset.aksn)); });
+  $$("[data-tabo]").forEach(el => { const r = yolAl(el.dataset.tabo); el.innerHTML = Math.abs(r.c) > 0.01 ? taboSvg(aksNorm(r.a), el.dataset.tabo.endsWith("R") ? "#ff8a65" : "#64b5f6") + "<span>Aks " + aksNorm(r.a) + "° (TABO, karşıdan bakış)</span>" : "<span>Silindir yok – aks kullanılmaz</span>"; });
+  $$("[data-recete]").forEach(el => { const r = yolAl(el.dataset.recete); el.textContent = fmtRx(r) + (Math.abs(r.c) > 0.01 ? "   ⇄  " + fmtRx(transpoz(r)) : "") + "   SE " + fmtD(r.s + r.c / 2); });
+  const A = amax();
+  $("#uyumNot").textContent = `Uyum (akomodasyon) gücü ≈ ${fmtN(A, 1)} D → yakın nokta (emetrop gözde) ≈ ${Math.round(100 / A)} cm.${S.age >= 42 ? " Presbiyopi yaşı: yakın için Add gerekebilir." : ""}`;
+  $("#lensNot").textContent = S.lensTur === "kontak"
+    ? "Kontak lens göz üstünde durur; değerler korneadaki güçtür. Yüksek derecelerde gözlük değerinden farklıdır (verteks dönüşümü). Görüntü boyu neredeyse değişmez."
+    : `Gözlük camı gözden ${S.vertex} mm önde kabul edilir. Eksi cam görüntüyü küçültür, artı cam büyütür.` + (S.lensKul === "progresif" ? " Progresifte yakına bakınca Add tam, orta mesafede kısmen, uzakta hiç eklenmez." : S.lensKul === "okuma" ? " Okuma gözlüğüyle uzağa bakınca Add yüzünden uzak bulanıklaşır." : "");
+  bolucuGoster();
+}
+
+function etiketler() {
+  const ad = { R: "Sağ göz", L: "Sol göz", B: "İki göz" }[S.goz];
+  const vaMetin = g => {
+    const R = durum("R", g, S.d), L = durum("L", g, S.d);
+    const va = S.goz === "R" ? R.va : S.goz === "L" ? L.va : binokulerVA(R, L);
+    const mar = S.goz === "R" ? R.mar : S.goz === "L" ? L.mar : 1 / va;
+    const [s, r] = vaSinif(va);
+    const renk = r === "r-ok" ? "#7bd88f" : r === "r-warn" ? "#ffb74d" : "#ff8a87";
+    return `<span style="color:${renk}">≈ ${vaYaz(va)} · ${snellen(mar)}</span>`;
+  };
+  const m = mesafeYaz(S.d);
+  if (S.kars) {
+    $("#etA").innerHTML = `<b>${ad}</b> · gözlüksüz · ${m}`;
+    $("#etB").innerHTML = `gözlüklü 👓`;
+    $("#vaA").innerHTML = vaMetin(false); $("#vaB").innerHTML = vaMetin(true);
+    $("#etB").classList.remove("gizli"); $("#vaB").classList.remove("gizli");
+  } else {
+    $("#etA").innerHTML = `<b>${ad}</b> · ${S.gozluk ? "gözlüklü 👓" : "gözlüksüz"} · ${m}`;
+    $("#vaA").innerHTML = vaMetin(S.gozluk);
+    $("#etB").classList.add("gizli"); $("#vaB").classList.add("gizli");
+  }
+  const parca = [];
+  const gl2 = S.kars ? [false, true] : [S.gozluk];
+  for (const g of gl2) for (const k of (S.goz === "B" ? ["R", "L"] : [S.goz])) parca.push(kisaOzet(durum(k, g, S.d)));
+  if (S.goz === "B" && !S.kars) {
+    const R = durum("R", S.gozluk, S.d), L = durum("L", S.gozluk, S.d);
+    parca.push(`<b>İki göz birlikte</b> ≈${vaYaz(binokulerVA(R, L))}.`);
+  }
+  $("#ozet").innerHTML = parca.join("<br>");
+}
+
+function guncelle(t) {
+  arayuz();
+  etiketler();
+  if (S.sekme === "aciklama" || !t) $("#aciklama").innerHTML = gozMetni("R") + gozMetni("L") + iki_gozMetni() + tabloMetni();
+  kaydet();
+  if (S.sahne !== "kamera") iste(t);
+}
+const eskiSekme = $("#sekmeler");
+eskiSekme.addEventListener("click", () => { if (S.sekme === "aciklama") $("#aciklama").innerHTML = gozMetni("R") + gozMetni("L") + iki_gozMetni() + tabloMetni(); });
+
+window.addEventListener("resize", () => iste());
+try { glKur(); } catch (e) { $("#glHata").style.display = "grid"; $("#glHata").textContent = "Grafik hatası: " + e.message; console.error(e); }
+sahneYenile();
+</script>
+</body>
+</html>
