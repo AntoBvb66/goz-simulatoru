@@ -2,267 +2,507 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Göz Simülatörü</title>
-<meta name="description" content="Miyopi, hipermetropi ve astigmatlı bir gözün gözlüklü ve gözlüksüz nasıl gördüğünü gösteren simülatör.">
-<meta name="theme-color" content="#0b1a22">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E👁️%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Miyopi, hipermetropi, astigmatizma ve presbiyopisi olan bir gözün dünyayı gözlüklü ve gözlüksüz nasıl gördüğünü canlı gösteren eğitim simülatörü.">
+<meta property="og:title" content="Göz Simülatörü">
+<meta property="og:description" content="Kırma kusurlarını gözlüklü ve gözlüksüz görün: miyopi, hipermetropi, astigmatizma, presbiyopi.">
+<meta name="theme-color" content="#f2f5f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2314b8a6'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M10 32s8-14 22-14 22 14 22 14-8 14-22 14-22-14-22-14z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='32' r='7' fill='white'/%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("gozsim_tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b1a22; --panel:#11252f; --panel2:#163140; --line:#24485a;
-  --text:#e8f3f6; --muted:#9db8c2; --accent:#1fb5a8; --accent2:#ffc857;
-  --od:#ff8a65; --os:#64b5f6; --ok:#7bd88f; --warn:#ffb74d; --bad:#ef5350;
+  color-scheme:light;
+  --bg:#f2f5f9;--surface:#fff;--surface2:#f5f8fb;--surface3:#e9eff6;
+  --line:#e1e7ef;--line2:#cbd5e1;
+  --text:#0f172a;--muted:#5b6b80;--faint:#8494a8;
+  --accent:#0f766e;--accent-ink:#fff;--accent-soft:#e0f5f2;--accent-text:#0f766e;
+  --od:#c2410c;--od-ink:#fff;--od-soft:#fff1e8;
+  --os:#1d6fc0;--os-ink:#fff;--os-soft:#e8f1fb;
+  --ok:#1f7a33;--ok-soft:#e5f5e9;--warn:#a85a00;--warn-soft:#fff3dc;--bad:#c92a2a;--bad-soft:#fde8e8;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 2px 10px rgba(15,23,42,.05);
+  --shadow-lg:0 14px 40px -12px rgba(15,23,42,.35);
+  --stage:#1e293b;--r:16px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#0b1120;--surface:#121a2c;--surface2:#172238;--surface3:#1d2a44;
+  --line:#22304a;--line2:#33446a;
+  --text:#e8eef7;--muted:#9babc0;--faint:#6f7f96;
+  --accent:#2dd4bf;--accent-ink:#042f2a;--accent-soft:rgba(45,212,191,.13);--accent-text:#5eead4;
+  --od:#ff8f5e;--od-ink:#2b0e02;--od-soft:rgba(255,143,94,.14);
+  --os:#60a5fa;--os-ink:#04172e;--os-soft:rgba(96,165,250,.14);
+  --ok:#5bd377;--ok-soft:rgba(91,211,119,.13);--warn:#fcc419;--warn-soft:rgba(252,196,25,.13);--bad:#ff7b7b;--bad-soft:rgba(255,123,123,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 18px rgba(0,0,0,.22);
+  --shadow-lg:0 16px 50px -12px rgba(0,0,0,.7);
+  --stage:#0f172a;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0b1120;--surface:#121a2c;--surface2:#172238;--surface3:#1d2a44;
+  --line:#22304a;--line2:#33446a;
+  --text:#e8eef7;--muted:#9babc0;--faint:#6f7f96;
+  --accent:#2dd4bf;--accent-ink:#042f2a;--accent-soft:rgba(45,212,191,.13);--accent-text:#5eead4;
+  --od:#ff8f5e;--od-ink:#2b0e02;--od-soft:rgba(255,143,94,.14);
+  --os:#60a5fa;--os-ink:#04172e;--os-soft:rgba(96,165,250,.14);
+  --ok:#5bd377;--ok-soft:rgba(91,211,119,.13);--warn:#fcc419;--warn-soft:rgba(252,196,25,.13);--bad:#ff7b7b;--bad-soft:rgba(255,123,123,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 18px rgba(0,0,0,.22);
+  --shadow-lg:0 16px 50px -12px rgba(0,0,0,.7);
+  --stage:#0f172a;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{overflow-x:hidden;margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-body{padding-bottom:40px}
-button{font:inherit;color:inherit}
-h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.2px}
-header{display:flex;align-items:center;gap:10px;padding:10px 14px 6px}
-header .logo{width:30px;height:30px;border-radius:9px;background:var(--accent);display:grid;place-items:center;font-size:18px}
-header small{display:block;color:var(--muted);font-size:12px;font-weight:400}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{margin:0}
+body{overflow-x:clip;min-height:100vh;color:var(--text);background:radial-gradient(1100px 420px at 0% -8%,rgba(20,184,166,.13),transparent 60%),radial-gradient(900px 420px at 100% -8%,rgba(37,99,235,.10),transparent 60%),var(--bg);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+input,select{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ik{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gizli{display:none!important}
+
+/* üst bar */
+.ust{display:flex;align-items:center;gap:12px;max-width:1600px;margin:0 auto;padding:16px 20px 12px}
+.marka{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.marka>div{min-width:0}
+.logo{flex:0 0 auto;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#14b8a6,#2563eb);box-shadow:0 6px 18px -4px rgba(37,99,235,.45)}
+.logo .ik{width:24px;height:24px;stroke-width:2.2}
+h1{margin:0;font-size:19px;line-height:1.2;font-weight:800;letter-spacing:-.02em}
+.marka small{display:block;margin-top:2px;color:var(--muted);font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ust-dug{display:flex;gap:8px;flex:0 0 auto}
+.ikon-dug{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--muted);box-shadow:var(--shadow);transition:color .15s,border-color .15s}
+.ikon-dug:hover{color:var(--text);border-color:var(--line2)}
+.ikon-dug.metinli{width:auto;display:flex;align-items:center;gap:7px;padding:0 14px;font-size:13.5px;font-weight:600}
+.ikon-dug.kucuk{width:32px;height:32px;border-radius:10px;border-color:transparent;background:transparent;box-shadow:none}
+
+/* düzen */
+.duzen{max-width:1600px;margin:0 auto}
+.sol{display:contents}
+#sahneKap{position:sticky;top:0;z-index:5;padding:8px 12px 10px;background:var(--bg);background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 
 /* sahne */
-#sahneKap{position:sticky;top:0;z-index:5;background:var(--bg);padding:0 10px 6px}
-#tuval{position:relative;width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:#222;touch-action:none}
+#tuval{position:relative;width:100%;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:var(--stage);box-shadow:var(--shadow-lg);touch-action:pan-y}
+#tuval.kars{touch-action:none;cursor:ew-resize}
 #tuval canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.etiket{position:absolute;top:8px;padding:3px 8px;border-radius:8px;font-size:12px;font-weight:600;background:rgba(10,25,32,.78);color:#fff;pointer-events:none;max-width:48%}
-.etiket b{font-weight:700}
-#etA{left:8px} #etB{right:8px;text-align:right}
-.va{position:absolute;bottom:8px;padding:3px 8px;border-radius:8px;font-size:12.5px;font-weight:700;background:rgba(10,25,32,.82);pointer-events:none}
-#vaA{left:8px} #vaB{right:8px}
-#bolucu{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none;display:none}
-#bolucu::after{content:"⟷";position:absolute;top:50%;left:-17px;width:32px;height:32px;margin-top:-16px;border-radius:50%;background:#fff;color:#0b1a22;display:grid;place-items:center;font-weight:800;font-size:16px}
-#glHata{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:20px;color:#fff;background:#3a1d1d}
+.etiket,.va{position:absolute;max-width:calc(50% - 16px);padding:5px 11px;border-radius:999px;font-size:12.5px;line-height:1.35;font-weight:600;color:#fff;background:rgba(15,23,42,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.2);pointer-events:none}
+.etiket b{font-weight:800}
+.etiket{top:10px} #etA{left:10px} #etB{right:10px;text-align:right}
+.va{bottom:10px;font-weight:700} #vaA{left:10px} #vaB{right:10px;text-align:right}
+.va small{font-size:11.5px;font-weight:600;opacity:.75;margin-left:2px}
+#bolucu{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #fff;box-shadow:0 0 10px rgba(0,0,0,.45);pointer-events:none;display:none}
+#bolucu::after{content:"";position:absolute;top:50%;left:-20px;width:38px;height:38px;margin-top:-19px;border-radius:50%;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 6-6 6 6 6M15 6l6 6-6 6'/%3E%3C/svg%3E") center/20px no-repeat;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+#glHata{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;color:#fff;background:#3a1d1d}
 
-.hizli{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.seg{min-width:0;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:2px;flex:1 1 auto}
-.seg button{flex:1;border:0;background:none;padding:7px 6px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap}
-.seg button.on{background:var(--accent);color:#04201d}
-.seg button[data-v="R"].on{background:var(--od);color:#2a0d02}
-.seg button[data-v="L"].on{background:var(--os);color:#03182a}
-.tgl{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:7px 10px;font-size:13px;font-weight:650;color:var(--muted);white-space:nowrap}
-.tgl.on{background:var(--accent2);color:#2b1d00;border-color:var(--accent2)}
-#ozet{margin-top:7px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:8px 10px;font-size:13.2px;line-height:1.4;max-height:96px;overflow:auto}
-#ozet .od{color:var(--od);font-weight:700} #ozet .os{color:var(--os);font-weight:700}
+/* hızlı seçim çubukları */
+.hizli{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.seg{display:flex;gap:2px;min-width:0;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.seg button{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 6px;border:0;border-radius:10px;background:none;color:var(--muted);font-size:13.5px;font-weight:600;white-space:nowrap;transition:background .15s,color .15s}
+.seg button .ik{width:16px;height:16px}
+.seg button:hover{color:var(--text);background:var(--surface2)}
+.seg button.on{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px -2px rgba(15,118,110,.5)}
+.seg button[data-v="R"].on{background:var(--od);color:var(--od-ink);box-shadow:none}
+.seg button[data-v="L"].on{background:var(--os);color:var(--os-ink);box-shadow:none}
+.d{width:8px;height:8px;border-radius:50%;flex:0 0 auto;display:inline-block}
+.d.od{background:var(--od)} .d.os{background:var(--os)} .d.iki{background:linear-gradient(90deg,var(--od) 50%,var(--os) 50%)}
+.seg button.on .d{background:currentColor}
 
-main{padding:4px 10px}
-.cips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none}
-.cips::-webkit-scrollbar{display:none}
-.cip{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--muted)}
-.cip.on{background:var(--accent);color:#04201d;border-color:var(--accent)}
-.baslik{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:12px 2px 4px;font-weight:700}
-.mesafe{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-top:6px}
-.mesafe output{min-width:64px;font-weight:700;text-align:right}
-input[type=range]{flex:1;accent-color:var(--accent);height:28px}
+/* kartlar */
+.kart{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.kart-bas{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.kart-bas h2,.kart h3{margin:0;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.kart-bas h2 .ik{color:var(--accent-text)}
+.kart h3 small{font-size:12px;font-weight:600;color:var(--muted)}
 
-.sekmeler{display:flex;gap:4px;margin:14px 0 8px;background:var(--panel);border-radius:12px;padding:3px;border:1px solid var(--line)}
-.sekmeler button{flex:1;border:0;background:none;padding:9px 2px;border-radius:9px;font-size:13px;font-weight:650;color:var(--muted)}
-.sekmeler button.on{background:var(--panel2);color:var(--text);box-shadow:inset 0 -2px 0 var(--accent)}
-.sayfa{display:none} .sayfa.on{display:block}
+/* özet */
+#ozetKart{margin:2px 12px 16px}
+.ozet-olcek{font-size:12.5px;color:var(--muted);font-weight:500;text-align:right}
+.oz{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+.oz:first-child,.oz-grup+.oz{border-top:0}
+.oz-goz{display:flex;justify-content:center;padding:2px 0;border-radius:8px;font-size:12px;font-weight:700}
+.oz-goz.od{background:var(--od-soft);color:var(--od)} .oz-goz.os{background:var(--os-soft);color:var(--os)} .oz-goz.iki{background:var(--accent-soft);color:var(--accent-text)}
+.oz-metin{font-size:13.5px;line-height:1.45}
+.oz-metin small{display:block;margin-top:2px;color:var(--muted);font-size:12.5px}
+.oz-grup{display:flex;align-items:center;gap:6px;margin:12px 0 2px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.oz-grup:first-child{margin-top:0}
+.oz-grup .ik{width:15px;height:15px}
+.olcek-not{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
+.rozet{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.r-ok{background:var(--ok-soft);color:var(--ok)} .r-warn{background:var(--warn-soft);color:var(--warn)} .r-bad{background:var(--bad-soft);color:var(--bad)}
+span.od{color:var(--od);font-weight:700} span.os{color:var(--os);font-weight:700}
 
-.kart{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
-.kart h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px}
+/* sağ panel */
+.sag{padding:0 12px 8px}
+.blok{margin-bottom:22px}
+.blok-bas{display:flex;align-items:center;gap:10px;margin:0 2px 10px;font-size:16px;font-weight:750;letter-spacing:-.01em}
+.blok-bas .no{width:26px;height:26px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);font-size:13px;font-weight:800}
+.blok-bas small{margin-left:auto;font-size:12.5px;font-weight:500;color:var(--muted)}
+
+.rehber{border-color:transparent;background:linear-gradient(135deg,var(--accent-soft),var(--os-soft)),var(--surface);margin-bottom:22px}
+.adimlar{margin:6px 0 4px;padding:0;list-style:none;counter-reset:a}
+.adimlar li{counter-increment:a;position:relative;padding:5px 0 5px 34px;font-size:14px;line-height:1.5}
+.adimlar li::before{content:counter(a);position:absolute;left:0;top:5px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:12.5px;font-weight:800}
+
+.ornekler{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ornek{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;padding:11px 12px;text-align:left;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);transition:border-color .15s,transform .15s,background .15s}
+.ornek:hover{border-color:var(--line2);transform:translateY(-1px)}
+.ornek .tur{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ornek .tur i{width:8px;height:8px;border-radius:50%}
+.ornek b{font-size:14px;font-weight:700;line-height:1.3}
+.ornek em{font-style:normal;font-size:12.5px;line-height:1.35;color:var(--muted)}
+.ornek.on{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.ornek.ek{display:none}
+.ornekler.acik .ornek.ek{display:flex}
+.alt-dug{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:8px}
+.metin-dug{display:inline-flex;align-items:center;gap:6px;padding:6px 4px;border:0;background:none;color:var(--accent-text);font-size:13.5px;font-weight:650}
+.metin-dug .ik{width:16px;height:16px;transition:transform .2s}
+.metin-dug.acik .ik{transform:rotate(180deg)}
+
+.secim{display:grid;gap:8px}
+.secim.uc{grid-template-columns:repeat(3,minmax(0,1fr))}
+.secim.dort{grid-template-columns:repeat(4,minmax(0,1fr))}
+.secim button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0;padding:12px 4px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--text);box-shadow:var(--shadow);font-size:13px;font-weight:600;line-height:1.2;text-align:center;transition:border-color .15s,background .15s}
+.secim button .ik{width:22px;height:22px;color:var(--muted)}
+.secim button small{font-size:11.5px;font-weight:500;color:var(--muted)}
+.secim button:hover{border-color:var(--line2)}
+.secim button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-text);box-shadow:inset 0 0 0 1px var(--accent)}
+.secim button.on .ik,.secim button.on small{color:var(--accent-text)}
+.mesafe{display:flex;align-items:center;gap:12px;margin-top:8px;padding:8px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.mesafe>.ik{color:var(--muted)}
+.mesafe output{min-width:58px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{flex:1;min-width:0;height:28px;margin:0;accent-color:var(--accent)}
+
+.sekmeler{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:4px;margin-bottom:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.sekmeler button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:8px 2px 7px;border:0;border-radius:12px;background:none;color:var(--muted);font-size:12.5px;font-weight:600;transition:background .15s,color .15s}
+.sekmeler button:hover{color:var(--text)}
+.sekmeler button.on{background:var(--accent-soft);color:var(--accent-text)}
+.sayfa{display:none}
+.sayfa.on{display:block;animation:belir .2s ease}
+@keyframes belir{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* reçete kartları */
 .nokta{width:10px;height:10px;border-radius:50%;display:inline-block}
+.kart.od{box-shadow:inset 0 3px 0 var(--od),var(--shadow)} .kart.os{box-shadow:inset 0 3px 0 var(--os),var(--shadow)}
 .kart.od h3 .nokta{background:var(--od)} .kart.os h3 .nokta{background:var(--os)}
-.satir{display:grid;grid-template-columns:78px minmax(0,1fr);align-items:center;gap:8px;margin:7px 0}
+.tani{display:inline-block;margin:8px 0 2px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600}
+.kart.od .tani{background:var(--od-soft);color:var(--od)} .kart.os .tani{background:var(--os-soft);color:var(--os)}
+.satir{display:grid;grid-template-columns:108px minmax(0,1fr);align-items:center;gap:10px;margin:9px 0}
 .satir>*{min-width:0}
-.satir label{font-size:13px;color:var(--muted);font-weight:600}
+.satir label{font-size:13.5px;font-weight:650;line-height:1.25}
+.satir label small{display:block;margin-top:2px;font-size:11.5px;font-weight:500;color:var(--muted)}
 .adim{display:flex;align-items:center;gap:6px}
-.adim button{width:40px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);font-size:20px;font-weight:700;flex:0 0 auto}
-.adim input{flex:1;min-width:0;height:38px;border-radius:10px;border:1px solid var(--line);background:#0c1d26;color:var(--text);text-align:center;font-size:16px;font-weight:700}
-.aksSatir{display:flex;align-items:center;gap:8px}
-.aksSatir input[type=number]{width:62px;height:38px;border-radius:10px;border:1px solid var(--line);background:#0c1d26;color:var(--text);text-align:center;font-size:16px;font-weight:700}
-.tabo{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-top:2px}
-.tabo svg{flex:0 0 auto}
-.recete{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:var(--accent2);margin-top:4px}
-.dugmeler{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.dugme{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px 11px;font-size:13px;font-weight:600}
-.dugme.ana{background:var(--accent);color:#04201d;border-color:var(--accent)}
-select{width:100%;height:40px;border-radius:10px;border:1px solid var(--line);background:#0c1d26;color:var(--text);font:inherit;padding:0 8px}
-.not{font-size:12.5px;color:var(--muted);margin-top:6px}
+.adim button{width:42px;height:42px;flex:0 0 auto;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);font-size:20px;font-weight:600;transition:background .12s}
+.adim button:hover{background:var(--surface3)}
+.adim button:active{transform:scale(.96)}
+.adim input,.aksSatir input[type=number]{height:42px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);text-align:center;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.adim input{flex:1;min-width:0}
+.aksSatir{display:flex;align-items:center;gap:10px}
+.aksSatir input[type=number]{width:68px;flex:0 0 auto;-moz-appearance:textfield;appearance:textfield}
+.aksSatir input::-webkit-outer-spin-button,.aksSatir input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.tabo{display:flex;align-items:center;gap:10px;margin-top:2px;font-size:12px;color:var(--muted)}
+.tabo svg{flex:0 0 auto;color:var(--line2)}
+.recete{margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--surface2);font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:12.5px;line-height:1.6;overflow-wrap:anywhere}
+.dugmeler{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px}
+.dugme{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font-size:13.5px;font-weight:600;box-shadow:var(--shadow);transition:border-color .15s,background .15s}
+.dugme:hover{border-color:var(--line2);background:var(--surface2)}
+.dugme.ana,.dugme.ana:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dugme .ik{width:16px;height:16px}
+select{width:100%;height:42px;padding:0 36px 0 12px;border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:14.5px;-webkit-appearance:none;appearance:none;background:var(--surface2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238494a8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 12px center/16px no-repeat}
+select option{background:var(--surface);color:var(--text)}
+.not{margin:8px 2px 0;font-size:12.8px;line-height:1.5;color:var(--muted)}
+.ipucu{margin:0 2px 2px;font-size:12.8px;color:var(--muted)}
+.ipucu b{color:var(--text)}
 
-.ac h4{margin:12px 0 4px;font-size:14px}
-.ac p,.ac li{font-size:13.6px;margin:4px 0}
-.ac ul{padding-left:18px;margin:4px 0}
-.rozet{display:inline-block;padding:1px 7px;border-radius:7px;font-size:12px;font-weight:700;margin-right:4px}
-.r-ok{background:rgba(123,216,143,.18);color:var(--ok)} .r-warn{background:rgba(255,183,77,.18);color:var(--warn)} .r-bad{background:rgba(239,83,80,.2);color:#ff8a87}
-table{width:100%;border-collapse:collapse;font-size:12.8px;margin-top:6px}
-th,td{border-bottom:1px solid var(--line);padding:6px 4px;text-align:center}
-th{color:var(--muted);font-weight:650;font-size:12px}
-td:first-child,th:first-child{text-align:left}
-.bilgi h4{margin:14px 0 4px;color:var(--accent)}
-.bilgi p,.bilgi li{font-size:13.6px}
-.formul{font-family:ui-monospace,Consolas,monospace;background:#0c1d26;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12.5px;overflow-x:auto;white-space:nowrap}
-.gizli{display:none!important}
-/* masaüstü: solda görüntü, sağda ayarlar */
+/* rapor */
+.rapor h4{margin:0 0 8px;font-size:15px;font-weight:700}
+.rapor p{margin:7px 0;font-size:13.8px;line-height:1.55}
+.rapor .rozet{margin-right:4px}
+.rapor table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px}
+.rapor th,.rapor td{padding:8px 3px;border-bottom:1px solid var(--line);text-align:center}
+.rapor th{font-size:11.5px;font-weight:650;line-height:1.3;color:var(--muted)}
+.rapor td:first-child,.rapor th:first-child{text-align:left;font-weight:600}
+.rapor tr:last-child td{border-bottom:0}
+
+/* bilgi */
+.bilgi .kart{padding:4px 14px}
+.bilgi details{border-top:1px solid var(--line)}
+.bilgi details:first-child{border-top:0}
+.bilgi summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 2px;list-style:none;cursor:pointer;font-size:14.5px;font-weight:650}
+.bilgi summary::-webkit-details-marker{display:none}
+.bilgi summary::after{content:"";width:16px;height:16px;flex:0 0 auto;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238494a8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/16px no-repeat;transition:transform .2s}
+.bilgi details[open] summary::after{transform:rotate(180deg)}
+.bilgi details>div{padding:0 2px 12px}
+.bilgi p,.bilgi li{margin:6px 0;font-size:13.8px;line-height:1.6}
+.bilgi ul{margin:4px 0;padding-left:18px}
+
+.alt-bilgi{max-width:1600px;margin:12px auto 0;padding:18px 16px calc(26px + env(safe-area-inset-bottom));border-top:1px solid var(--line);text-align:center;font-size:12.8px;color:var(--muted)}
+.alt-bilgi p{margin:4px 0}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:899px){
+  .blok,.rehber{scroll-margin-top:calc(var(--yapiskan,380px) + 10px)}
+}
+@media (max-width:560px){
+  .ust{padding:12px 12px 6px}
+  h1{font-size:17px}
+  .marka small{font-size:12px;white-space:normal}
+  .ikon-dug.metinli{width:40px;padding:0;justify-content:center}
+  .ikon-dug.metinli span{display:none}
+  .hizli{grid-template-columns:1fr;gap:6px;margin-top:8px}
+  .seg button{padding:7px 4px;font-size:13px}
+  .satir{grid-template-columns:96px minmax(0,1fr)}
+}
 @media (min-width:900px){
-  body{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,440px);column-gap:4px;max-width:1600px;margin:0 auto;align-items:start;padding-bottom:0}
-  header{grid-column:1/-1}
-  #sahneKap{grid-column:1;padding:0 6px 10px 14px}
-  #tuval{width:min(100%,calc((100vh - 200px)*4/3));margin:0 auto}
-  .hizli,#ozet{max-width:min(100%,calc((100vh - 200px)*4/3));margin-left:auto;margin-right:auto}
-  .hizli{margin-top:8px}
-  main{grid-column:2;position:sticky;top:0;max-height:calc(100vh - 56px);overflow:auto;padding:0 14px 20px 6px}
+  .duzen{display:grid;grid-template-columns:minmax(0,1fr) minmax(380px,430px);gap:24px;align-items:start;padding:4px 20px 8px}
+  .sol{display:block;position:sticky;top:12px}
+  #sahneKap{position:static;padding:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+  #tuval,.hizli,#ozetKart{width:min(100%,calc((100vh - 350px) * 4 / 3));margin-left:auto;margin-right:auto}
+  #ozetKart{margin-top:12px;margin-bottom:0}
+  #ozet{max-height:130px;overflow:auto}
+  .sag{padding:0}
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">👁</div>
-  <div><h1>Göz Kırma Kusuru Simülatörü</h1><small>Miyopi · Hipermetropi · Astigmatizma · Presbiyopi</small></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-glasses" viewBox="0 0 24 24"><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M10 15a2 2 0 0 1 4 0"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/><path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/></symbol>
+  <symbol id="i-split" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M6 4h12M7.5 9h9M9 14h6M10.5 19h3"/></symbol>
+  <symbol id="i-dial" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 5v14M5 12h14M7 7l10 10M17 7 7 17"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></symbol>
+  <symbol id="i-city" viewBox="0 0 24 24"><path d="M3 21h18M6 21V9l5-3v15M18 21V12l-7-3"/><path d="M8.5 11v.01M8.5 14v.01M8.5 17v.01M14.5 14v.01M14.5 17v.01"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-report" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+</svg>
+
+<header class="ust">
+  <div class="marka">
+    <div class="logo"><svg class="ik"><use href="#i-eye"/></svg></div>
+    <div><h1>Göz Simülatörü</h1><small>Kırma kusurlarını gözlüklü ve gözlüksüz görün</small></div>
+  </div>
+  <div class="ust-dug">
+    <button class="ikon-dug metinli" id="yardimDug" title="Nasıl kullanılır?"><svg class="ik"><use href="#i-help"/></svg><span>Nasıl kullanılır?</span></button>
+    <button class="ikon-dug" id="temaDug" title="Açık / koyu görünüm" aria-label="Açık / koyu görünüm"><svg class="ik"><use href="#i-moon"/></svg></button>
+  </div>
 </header>
 
-<div id="sahneKap">
-  <div id="tuval">
-    <canvas id="gl"></canvas>
-    <div id="bolucu"></div>
-    <div class="etiket" id="etA"></div>
-    <div class="etiket gizli" id="etB"></div>
-    <div class="va" id="vaA"></div>
-    <div class="va gizli" id="vaB"></div>
-    <div id="glHata">Bu cihaz WebGL2 desteklemiyor; simülasyon çizilemiyor.</div>
-  </div>
-  <div class="hizli">
-    <div class="seg" id="gozSec">
-      <button data-v="R">Sağ göz</button><button data-v="L">Sol göz</button><button data-v="B">İki göz</button>
+<div class="duzen">
+<div class="sol">
+  <div id="sahneKap">
+    <div id="tuval">
+      <canvas id="gl"></canvas>
+      <div id="bolucu"></div>
+      <div class="etiket" id="etA"></div>
+      <div class="etiket gizli" id="etB"></div>
+      <div class="va" id="vaA"></div>
+      <div class="va gizli" id="vaB"></div>
+      <div id="glHata">Bu cihaz WebGL2 desteklemiyor; simülasyon çizilemiyor.</div>
     </div>
-    <button class="tgl" id="gozlukTgl">👓 Gözlük</button>
-    <button class="tgl" id="karsTgl">◧ Karşılaştır</button>
+    <div class="hizli">
+      <div class="seg" id="gozSec" role="group" aria-label="Hangi göz">
+        <button data-v="R"><i class="d od"></i>Sağ göz</button><button data-v="L"><i class="d os"></i>Sol göz</button><button data-v="B"><i class="d iki"></i>İki göz</button>
+      </div>
+      <div class="seg" id="modSec" role="group" aria-label="Gözlük">
+        <button data-v="yok"><svg class="ik"><use href="#i-eye"/></svg>Gözlüksüz</button><button data-v="var"><svg class="ik"><use href="#i-glasses"/></svg>Gözlüklü</button><button data-v="kars"><svg class="ik"><use href="#i-split"/></svg>Karşılaştır</button>
+      </div>
+    </div>
   </div>
-  <div id="ozet"></div>
+  <section class="kart" id="ozetKart">
+    <div class="kart-bas"><h2><svg class="ik"><use href="#i-eye"/></svg>Ne görüyor?</h2><span class="ozet-olcek" id="ozetMesafe"></span></div>
+    <div id="ozet"></div>
+    <p class="olcek-not">Sayılar tahmini görme keskinliğidir: <b>1,0</b> tam net · <b>0,5</b> yarı yarıya · <b>0,1</b> çok zayıf.</p>
+  </section>
 </div>
 
-<main>
-  <div class="baslik">Sahne</div>
-  <div class="cips" id="sahneSec">
-    <button class="cip" data-v="esel">Eşel</button>
-    <button class="cip" data-v="kadran">Astigmat kadranı</button>
-    <button class="cip" data-v="okuma">Okuma kartı</button>
-    <button class="cip" data-v="sokak">Sokak</button>
-    <button class="cip" data-v="foto">📷 Fotoğraf</button>
-    <button class="cip" data-v="kamera">🎥 Canlı kamera</button>
-  </div>
-  <input type="file" id="dosya" accept="image/*" class="gizli">
-
-  <div class="baslik">Bakılan mesafe</div>
-  <div class="cips" id="mesafeSec">
-    <button class="cip" data-v="6">Uzak · 6 m</button>
-    <button class="cip" data-v="1">Orta · 1 m</button>
-    <button class="cip" data-v="0.4">Yakın · 40 cm</button>
-    <button class="cip" data-v="0.25">Çok yakın · 25 cm</button>
-  </div>
-  <div class="mesafe"><span>📏</span><input type="range" id="mesafeKaydir" min="0" max="1000" step="1"><output id="mesafeYaz"></output></div>
-
-  <div class="sekmeler" id="sekmeler">
-    <button data-v="goz" class="on">Göz</button>
-    <button data-v="gozluk">Gözlük</button>
-    <button data-v="aciklama">Açıklama</button>
-    <button data-v="ayar">Ayarlar</button>
-    <button data-v="bilgi">Bilgi</button>
-  </div>
-
-  <!-- GÖZ -->
-  <section class="sayfa on" id="s-goz">
-    <div class="kart">
-      <div class="satir"><label>Hazır örnek</label>
-        <select id="ornek"></select></div>
-      <div class="satir"><label>Yaş</label><div class="adim" data-yol="age" data-min="5" data-max="90" data-adim="1" data-bicim="yas"></div></div>
-      <div class="not" id="uyumNot"></div>
-    </div>
-    <div class="kart od" id="kartEyeR"></div>
-    <div class="kart os" id="kartEyeL"></div>
-    <div class="dugmeler">
-      <button class="dugme" data-kopya="eye:R>L">Sağ → Sol kopyala</button>
-      <button class="dugme" data-kopya="eye:L>R">Sol → Sağ kopyala</button>
-      <button class="dugme" data-sifirla="eye">İki gözü sıfırla</button>
-    </div>
-    <p class="not">Değerler reçetedeki gibi yazılır: Sfer (S), Silindir (C) ve Aks (TABO, 0–180°). Eksi silindir veya artı silindir yazılabilir; hesap ikisini de doğru işler.</p>
+<main class="sag">
+  <section class="kart rehber" id="rehber">
+    <div class="kart-bas"><h2><svg class="ik"><use href="#i-help"/></svg>Nasıl kullanılır?</h2><button class="ikon-dug kucuk" id="rehberKapat" aria-label="Kapat" title="Kapat"><svg class="ik"><use href="#i-x"/></svg></button></div>
+    <ol class="adimlar">
+      <li><b>Bir örnek seçin</b> (miyop, astigmat…) ya da kendi reçetenizi <b>Göz</b> sekmesine yazın.</li>
+      <li><b>Neye</b> ve <b>ne kadar uzağa</b> bakıldığını seçin.</li>
+      <li>Görüntünün altındaki <b>Gözlüklü</b> veya <b>Karşılaştır</b> düğmesine basın. Karşılaştırmada ortadaki çizgiyi sürükleyin.</li>
+    </ol>
+    <p class="not">Ekrana kendi gözlüğünüzle, rahat bir mesafeden bakın. Bu bir eğitim simülasyonudur, tanı koymaz.</p>
+    <div class="dugmeler" style="margin-bottom:0"><button class="dugme ana" id="rehberTamam"><svg class="ik"><use href="#i-check"/></svg>Anladım</button></div>
   </section>
 
-  <!-- GÖZLÜK -->
-  <section class="sayfa" id="s-gozluk">
-    <div class="kart">
-      <div class="satir"><label>Lens türü</label>
-        <select id="lensTur"><option value="gozluk">Gözlük camı</option><option value="kontak">Kontak lens</option></select></div>
-      <div class="satir"><label>Kullanım</label>
-        <select id="lensKul">
-          <option value="uzak">Tek odaklı (uzak)</option>
-          <option value="okuma">Okuma gözlüğü (uzak + Add)</option>
-          <option value="progresif">Progresif / multifokal (mesafeye göre Add)</option>
-        </select></div>
-      <div class="satir" id="addSatir"><label>Add</label><div class="adim" data-yol="add" data-min="0" data-max="4" data-adim="0.25" data-bicim="d"></div></div>
-      <div class="satir"><label>Verteks</label><div class="adim" data-yol="vertex" data-min="0" data-max="20" data-adim="1" data-bicim="mm"></div></div>
+  <section class="blok" id="ornekBlok">
+    <h2 class="blok-bas"><span class="no">1</span>Bir örnek seçin</h2>
+    <div class="ornekler" id="ornekler"></div>
+    <div class="alt-dug">
+      <button class="metin-dug" id="dahaOrnek"><span>Daha fazla örnek</span><svg class="ik"><use href="#i-down"/></svg></button>
+      <button class="metin-dug" id="kendiDug"><svg class="ik"><use href="#i-pen"/></svg>Kendi reçetemi gireceğim</button>
     </div>
-    <div class="kart od" id="kartLensR"></div>
-    <div class="kart os" id="kartLensL"></div>
-    <div class="dugmeler">
-      <button class="dugme ana" id="tamDuzelt">✓ Tam düzeltme (göz değerlerini al)</button>
-      <button class="dugme" id="sferikEs">Sferik eşdeğer ver</button>
-      <button class="dugme" id="eksik">Eksik düzelt (−0,50 az)</button>
-      <button class="dugme" data-sifirla="lens">Camları sıfırla</button>
-    </div>
-    <p class="not" id="lensNot"></p>
   </section>
 
-  <!-- AÇIKLAMA -->
-  <section class="sayfa ac" id="s-aciklama"><div id="aciklama"></div></section>
+  <section class="blok">
+    <h2 class="blok-bas"><span class="no">2</span>Neye bakıyor?</h2>
+    <div class="secim uc" id="sahneSec">
+      <button data-v="esel"><svg class="ik"><use href="#i-chart"/></svg>Harf eşeli</button>
+      <button data-v="kadran"><svg class="ik"><use href="#i-dial"/></svg>Astigmat kadranı</button>
+      <button data-v="okuma"><svg class="ik"><use href="#i-book"/></svg>Okuma kartı</button>
+      <button data-v="sokak"><svg class="ik"><use href="#i-city"/></svg>Sokak</button>
+      <button data-v="foto"><svg class="ik"><use href="#i-image"/></svg>Fotoğraf yükle</button>
+      <button data-v="kamera"><svg class="ik"><use href="#i-camera"/></svg>Canlı kamera</button>
+    </div>
+    <input type="file" id="dosya" accept="image/*" class="gizli">
+  </section>
 
-  <!-- AYARLAR -->
-  <section class="sayfa" id="s-ayar">
-    <div class="kart">
-      <div class="satir"><label>Pupil</label><div class="adim" data-yol="pupil" data-min="2" data-max="8" data-adim="0.5" data-bicim="mm"></div></div>
-      <div class="dugmeler">
-        <button class="dugme" data-pupil="2.5">Güneşli gün 2,5 mm</button>
-        <button class="dugme" data-pupil="4">İç mekân 4 mm</button>
-        <button class="dugme" data-pupil="6.5">Gece 6,5 mm</button>
+  <section class="blok">
+    <h2 class="blok-bas"><span class="no">3</span>Ne kadar uzağa?</h2>
+    <div class="secim dort" id="mesafeSec">
+      <button data-v="6"><svg class="ik"><use href="#i-mountain"/></svg>Uzak<small>6 m</small></button>
+      <button data-v="1"><svg class="ik"><use href="#i-monitor"/></svg>Orta<small>1 m</small></button>
+      <button data-v="0.4"><svg class="ik"><use href="#i-book"/></svg>Yakın<small>40 cm</small></button>
+      <button data-v="0.25"><svg class="ik"><use href="#i-phone"/></svg>Çok yakın<small>25 cm</small></button>
+    </div>
+    <div class="mesafe"><svg class="ik"><use href="#i-ruler"/></svg><input type="range" id="mesafeKaydir" min="0" max="1000" step="1" aria-label="Bakılan mesafe"><output id="mesafeYaz"></output></div>
+  </section>
+
+  <section class="blok" id="detayBlok">
+    <h2 class="blok-bas"><span class="no">4</span>Ayrıntılar<small>değerler, gözlük, rapor</small></h2>
+    <nav class="sekmeler" id="sekmeler">
+      <button data-v="goz" class="on"><svg class="ik"><use href="#i-eye"/></svg>Göz</button>
+      <button data-v="gozluk"><svg class="ik"><use href="#i-glasses"/></svg>Gözlük</button>
+      <button data-v="aciklama"><svg class="ik"><use href="#i-report"/></svg>Rapor</button>
+      <button data-v="ayar"><svg class="ik"><use href="#i-sliders"/></svg>Ayarlar</button>
+      <button data-v="bilgi"><svg class="ik"><use href="#i-info"/></svg>Bilgi</button>
+    </nav>
+
+    <!-- GÖZ -->
+    <section class="sayfa on" id="s-goz">
+      <div class="kart">
+        <div class="satir" style="margin-top:0"><label>Yaş<small>yakına odaklanmayı etkiler</small></label><div class="adim" data-yol="age" data-min="5" data-max="90" data-adim="1" data-bicim="yas"></div></div>
+        <p class="not" id="uyumNot"></p>
       </div>
-      <p class="not">Pupil büyüdükçe aynı derecedeki bulanıklık artar (gece görüşü daha kötüdür). Küçük pupil “iğne deliği” gibi davranır.</p>
-    </div>
-    <div class="kart">
-      <div class="satir"><label>Görüş açısı</label><div class="adim" data-yol="fovGecerli" data-min="5" data-max="90" data-adim="5" data-bicim="derece"></div></div>
-      <p class="not">Sokak, fotoğraf ve kamera sahnesinin ekrandaki genişliğinin gerçekte kaç dereceye karşılık geldiği. Küçük değer = sahne daha yakından/büyük görülüyor kabul edilir. Eşel, kadran ve okuma kartı açısal olarak kalibrelidir (1,0 satırı harf boyu 5 açı dakikası).</p>
-    </div>
-    <div class="kart">
-      <div class="satir"><label>Kalite</label>
-        <select id="kalite"><option value="96">Normal</option><option value="160">Yüksek</option><option value="48">Hızlı</option></select></div>
-      <p class="not">Yüksek kalite daha pürüzsüz bulanıklık verir; eski telefonlarda yavaş olabilir.</p>
-    </div>
-    <div class="dugmeler"><button class="dugme" id="hepsiSifir">Tüm ayarları sıfırla</button></div>
-  </section>
+      <div class="kart od" id="kartEyeR"></div>
+      <div class="kart os" id="kartEyeL"></div>
+      <div class="dugmeler">
+        <button class="dugme" data-kopya="eye:R>L">Sağ → Sol kopyala</button>
+        <button class="dugme" data-kopya="eye:L>R">Sol → Sağ kopyala</button>
+        <button class="dugme" data-sifirla="eye"><svg class="ik"><use href="#i-reset"/></svg>İki gözü sıfırla</button>
+      </div>
+      <p class="not">Değerler reçetedeki gibi yazılır: <b>Sfer (S)</b>, <b>Silindir (C)</b> ve <b>Aks</b> (TABO, 0–180°). Eksi ya da artı silindir yazılabilir; hesap ikisini de doğru işler.</p>
+    </section>
 
-  <!-- BİLGİ -->
-  <section class="sayfa bilgi" id="s-bilgi">
-    <div class="kart">
-      <h4>Bu uygulama ne yapar?</h4>
-      <p>İki göz için ayrı ayrı girilen kırma kusuru değerlerine (sfer, silindir, aks) göre kişinin dünyayı nasıl gördüğünü fiziksel optik hesapla canlandırır. Ardından gözlük ya da kontak lens değerleri girilerek düzeltilmiş görüş gösterilir. Tek göz ve iki göz görüşü, farklı bakış mesafeleri, yaşa bağlı uyum gücü ve pupil çapı hesaba katılır.</p>
-      <h4>Miyopi</h4>
-      <p>Gözün kırıcılığı eksen uzunluğuna göre fazladır; uzaktan gelen ışık retinanın önünde odaklanır. Uzak bulanık, yakın nettir. Uzak nokta = 100 / |derece| cm (örn. −2,00 D → 50 cm). Eksi (ıraksak) camla düzeltilir; gözlük camı görüntüyü küçültür.</p>
-      <h4>Hipermetropi</h4>
-      <p>Işık retinanın arkasında odaklanır. Genç kişiler uyum (akomodasyon) yaparak bunu kapatabilir; bu yüzden uzağı net görüp çabuk yorulabilirler. Uyum gücü yaşla azaldığından önce yakın, ileri yaşta uzak da bulanıklaşır. Artı (yakınsak) camla düzeltilir; cam görüntüyü büyütür.</p>
-      <h4>Astigmatizma</h4>
-      <p>Kornea/lens her yönde aynı eğrilikte değildir; iki ana meridyen farklı kırar. Bir yöndeki çizgiler net, ona dik çizgiler bulanık görülür; noktalar uzamış (elips) görünür. Silindirik camla düzeltilir. Eksi silindir aksı 180° civarı “kurala uygun”, 90° civarı “kurala aykırı”, diğerleri “oblik” astigmattır.</p>
-      <h4>Presbiyopi</h4>
-      <p>Yaşla göz merceğinin esnekliği azalır, uyum gücü düşer (Hofstetter ortalaması: 18,5 − 0,3 × yaş D). 40’lı yaşlardan sonra yakın görme zorlaşır; okuma ilavesi (Add) gerekir.</p>
-      <h4>Reçete yazımı ve TABO</h4>
-      <p><b>S</b> sfer, <b>C</b> silindir, <b>Aks</b> silindirin eksenidir (0–180°). Aks TABO sistemine göre, hastaya karşıdan bakan kişinin gözünden saat yönünün tersine ölçülür. Örnek: −1,00 −0,75 × 180. Transpozisyon: S’ = S + C, C’ = −C, Aks’ = Aks ± 90°. Sferik eşdeğer: SE = S + C/2.</p>
-      <h4>Hesap yöntemi</h4>
-      <ul>
-        <li><b>Güç vektörleri (Thibos):</b> M = S + C/2, J0 = −(C/2)·cos2α, J45 = −(C/2)·sin2α. Göz ile cam vektörel olarak çıkarılır; kalan (rezidüel) kusur bulunur. Böylece eğik akslı, yanlış akslı veya eksik camlar doğru hesaplanır.</li>
-        <li><b>Mesafe ve uyum:</b> Bakılan cismin vergensi 1/d eklenir; göz, uyum gücü kadar (0 … Amax) artı güç ekleyerek en az bulanıklık konumuna odaklanır.</li>
-        <li><b>Bulanıklık:</b> Geometrik optik ile bulanıklık açısı ≈ pupil çapı × defokus (mm × D = mrad). Her ana meridyende ayrı hesaplanır; nokta yayılımı bir elips olur ve görüntü bu elipsle evrişime (konvolüsyon) sokulur.</li>
-        <li><b>Görme keskinliği tahmini:</b> MAR ≈ √(1 + (0,57 · pupil · B)²), B = √(M² + J0² + J45²) bulanıklık şiddeti. Ondalık VA = 1 / MAR (en fazla 1,0).</li>
-        <li><b>Gözlük büyütmesi:</b> SM ≈ 1 / (1 − h·F), h = verteks + 3 mm. Silindirli camda iki meridyende farklı büyütme olur (şekil bozulması). Kontak lenste büyütme ihmal edilebilir.</li>
-        <li><b>Verteks dönüşümü:</b> F<sub>kontak</sub> = F<sub>gözlük</sub> / (1 − d·F<sub>gözlük</sub>).</li>
-        <li><b>İki göz:</b> Beyin daha net görüntüyü ağır basacak şekilde birleştirir (bulanıklık bastırması). Simülasyonda her göz görüntüsü 1/(bulanıklık²+1) ağırlığıyla karıştırılır. İki göz farkı (anizometropi) ve görüntü boyu farkı (aniseikoni) ayrıca raporlanır.</li>
-      </ul>
-      <h4>Sınırlamalar</h4>
-      <p>Bu bir eğitim simülasyonudur, tanı aracı değildir. Yüksek dereceli sapmalar (küresel sapma, koma), kırınım, renk sapması, katarakt/keratokonus gibi hastalıklar ve beynin bulanıklığa uyumu modellenmemiştir. Görme keskinliği değerleri yaklaşık tahmindir; telefon ekranının çözünürlüğü ve kullanıcının kendi görmesi sonucu etkiler (kendi gözlüğünüzle bakın).</p>
-      <h4>Proje önerisi için fikir</h4>
-      <p>Optisyenlik öğrencileri ve hastalara “reçete → görüş” ilişkisini öğretmede kullanılabilir. Örn. ön test / son test ile kavram öğrenimi ölçülebilir; tam düzeltme, eksik düzeltme, yanlış aks ve sferik eşdeğer gibi uygulamalar görsel olarak karşılaştırılabilir.</p>
-    </div>
+    <!-- GÖZLÜK -->
+    <section class="sayfa" id="s-gozluk">
+      <div class="kart">
+        <div class="satir" style="margin-top:0"><label>Lens türü</label>
+          <select id="lensTur"><option value="gozluk">Gözlük camı</option><option value="kontak">Kontak lens</option></select></div>
+        <div class="satir"><label>Kullanım</label>
+          <select id="lensKul">
+            <option value="uzak">Tek odaklı (uzak)</option>
+            <option value="okuma">Okuma gözlüğü (uzak + Add)</option>
+            <option value="progresif">Progresif / multifokal</option>
+          </select></div>
+        <div class="satir" id="addSatir"><label>Add<small>yakın ilavesi</small></label><div class="adim" data-yol="add" data-min="0" data-max="4" data-adim="0.25" data-bicim="d"></div></div>
+        <div class="satir" style="margin-bottom:0"><label>Verteks<small>cam ile göz arası</small></label><div class="adim" data-yol="vertex" data-min="0" data-max="20" data-adim="1" data-bicim="mm"></div></div>
+      </div>
+      <p class="ipucu"><b>Hızlı cam seçimi.</b> “Tam düzeltme” gözün değerlerini aynen cama yazar.</p>
+      <div class="dugmeler">
+        <button class="dugme ana" id="tamDuzelt"><svg class="ik"><use href="#i-check"/></svg>Tam düzeltme</button>
+        <button class="dugme" id="sferikEs">Sferik eşdeğer</button>
+        <button class="dugme" id="eksik">Eksik düzelt (−0,50)</button>
+        <button class="dugme" data-sifirla="lens"><svg class="ik"><use href="#i-reset"/></svg>Camları sıfırla</button>
+      </div>
+      <div class="kart od" id="kartLensR"></div>
+      <div class="kart os" id="kartLensL"></div>
+      <p class="not" id="lensNot"></p>
+    </section>
+
+    <!-- RAPOR -->
+    <section class="sayfa rapor-sayfa" id="s-aciklama"><div id="aciklama"></div></section>
+
+    <!-- AYARLAR -->
+    <section class="sayfa" id="s-ayar">
+      <div class="kart">
+        <div class="satir" style="margin-top:0"><label>Göz bebeği<small>pupil çapı</small></label><div class="adim" data-yol="pupil" data-min="2" data-max="8" data-adim="0.5" data-bicim="mm"></div></div>
+        <div class="dugmeler" style="margin-bottom:0">
+          <button class="dugme" data-pupil="2.5">Güneşli gün · 2,5 mm</button>
+          <button class="dugme" data-pupil="4">İç mekân · 4 mm</button>
+          <button class="dugme" data-pupil="6.5">Gece · 6,5 mm</button>
+        </div>
+        <p class="not">Göz bebeği büyüdükçe aynı derecedeki bulanıklık artar; bu yüzden gece görüşü daha kötüdür. Küçük göz bebeği “iğne deliği” gibi davranır.</p>
+      </div>
+      <div class="kart">
+        <div class="satir" style="margin-top:0"><label>Görüş açısı<small>sokak / foto / kamera</small></label><div class="adim" data-yol="fovGecerli" data-min="5" data-max="90" data-adim="5" data-bicim="derece"></div></div>
+        <p class="not">Sokak, fotoğraf ve kamera sahnesinin ekrandaki genişliğinin gerçekte kaç dereceye karşılık geldiği. Küçük değer = sahne daha yakından/büyük görülüyor kabul edilir. Eşel, kadran ve okuma kartı açısal olarak kalibrelidir (1,0 satırı harf boyu 5 açı dakikası).</p>
+      </div>
+      <div class="kart">
+        <div class="satir" style="margin-top:0"><label>Kalite</label>
+          <select id="kalite"><option value="96">Normal</option><option value="160">Yüksek</option><option value="48">Hızlı</option></select></div>
+        <p class="not">Yüksek kalite daha pürüzsüz bulanıklık verir; eski telefonlarda yavaş olabilir.</p>
+      </div>
+      <div class="dugmeler"><button class="dugme" id="hepsiSifir"><svg class="ik"><use href="#i-reset"/></svg>Tüm ayarları sıfırla</button></div>
+    </section>
+
+    <!-- BİLGİ -->
+    <section class="sayfa bilgi" id="s-bilgi">
+      <div class="kart">
+        <details open><summary>Bu simülatör ne yapar?</summary><div>
+          <p>İki göz için ayrı ayrı girilen kırma kusuru değerlerine (sfer, silindir, aks) göre kişinin dünyayı nasıl gördüğünü fiziksel optik hesapla canlandırır. Ardından gözlük ya da kontak lens değerleri girilerek düzeltilmiş görüş gösterilir. Tek göz ve iki göz görüşü, farklı bakış mesafeleri, yaşa bağlı uyum gücü ve göz bebeği çapı hesaba katılır.</p>
+        </div></details>
+        <details><summary>Miyopi · uzağı bulanık görme</summary><div>
+          <p>Gözün kırıcılığı eksen uzunluğuna göre fazladır; uzaktan gelen ışık retinanın önünde odaklanır. Uzak bulanık, yakın nettir. Uzak nokta = 100 / |derece| cm (örn. −2,00 D → 50 cm). Eksi (ıraksak) camla düzeltilir; gözlük camı görüntüyü küçültür.</p>
+        </div></details>
+        <details><summary>Hipermetropi · yakını zor görme</summary><div>
+          <p>Işık retinanın arkasında odaklanır. Genç kişiler uyum (akomodasyon) yaparak bunu kapatabilir; bu yüzden uzağı net görüp çabuk yorulabilirler. Uyum gücü yaşla azaldığından önce yakın, ileri yaşta uzak da bulanıklaşır. Artı (yakınsak) camla düzeltilir; cam görüntüyü büyütür.</p>
+        </div></details>
+        <details><summary>Astigmatizma · yöne göre bulanıklık</summary><div>
+          <p>Kornea/lens her yönde aynı eğrilikte değildir; iki ana meridyen farklı kırar. Bir yöndeki çizgiler net, ona dik çizgiler bulanık görülür; noktalar uzamış (elips) görünür. Silindirik camla düzeltilir. Eksi silindir aksı 180° civarı “kurala uygun”, 90° civarı “kurala aykırı”, diğerleri “oblik” astigmattır.</p>
+        </div></details>
+        <details><summary>Presbiyopi · yaşa bağlı yakın görme kaybı</summary><div>
+          <p>Yaşla göz merceğinin esnekliği azalır, uyum gücü düşer (Hofstetter ortalaması: 18,5 − 0,3 × yaş D). 40’lı yaşlardan sonra yakın görme zorlaşır; okuma ilavesi (Add) gerekir.</p>
+        </div></details>
+        <details><summary>Reçete nasıl okunur? (S, C, Aks, TABO)</summary><div>
+          <p><b>S</b> sfer, <b>C</b> silindir, <b>Aks</b> silindirin eksenidir (0–180°). Aks TABO sistemine göre, hastaya karşıdan bakan kişinin gözünden saat yönünün tersine ölçülür. Örnek: −1,00 −0,75 × 180. Transpozisyon: S’ = S + C, C’ = −C, Aks’ = Aks ± 90°. Sferik eşdeğer: SE = S + C/2.</p>
+        </div></details>
+        <details><summary>Hesap yöntemi (uzmanlar için)</summary><div>
+          <ul>
+            <li><b>Güç vektörleri (Thibos):</b> M = S + C/2, J0 = −(C/2)·cos2α, J45 = −(C/2)·sin2α. Göz ile cam vektörel olarak çıkarılır; kalan (rezidüel) kusur bulunur. Böylece eğik akslı, yanlış akslı veya eksik camlar doğru hesaplanır.</li>
+            <li><b>Mesafe ve uyum:</b> Bakılan cismin vergensi 1/d eklenir; göz, uyum gücü kadar (0 … Amax) artı güç ekleyerek en az bulanıklık konumuna odaklanır.</li>
+            <li><b>Bulanıklık:</b> Geometrik optik ile bulanıklık açısı ≈ pupil çapı × defokus (mm × D = mrad). Her ana meridyende ayrı hesaplanır; nokta yayılımı bir elips olur ve görüntü bu elipsle evrişime (konvolüsyon) sokulur.</li>
+            <li><b>Görme keskinliği tahmini:</b> MAR ≈ √(1 + (0,57 · pupil · B)²), B = √(M² + J0² + J45²) bulanıklık şiddeti. Ondalık VA = 1 / MAR (en fazla 1,0).</li>
+            <li><b>Gözlük büyütmesi:</b> SM ≈ 1 / (1 − h·F), h = verteks + 3 mm. Silindirli camda iki meridyende farklı büyütme olur (şekil bozulması). Kontak lenste büyütme ihmal edilebilir.</li>
+            <li><b>Verteks dönüşümü:</b> F<sub>kontak</sub> = F<sub>gözlük</sub> / (1 − d·F<sub>gözlük</sub>).</li>
+            <li><b>İki göz:</b> Beyin daha net görüntüyü ağır basacak şekilde birleştirir (bulanıklık bastırması). Simülasyonda her göz görüntüsü 1/(bulanıklık²+1) ağırlığıyla karıştırılır. İki göz farkı (anizometropi) ve görüntü boyu farkı (aniseikoni) ayrıca raporlanır.</li>
+          </ul>
+        </div></details>
+        <details><summary>Sınırlamalar</summary><div>
+          <p>Bu bir eğitim simülasyonudur, tanı aracı değildir. Yüksek dereceli sapmalar (küresel sapma, koma), kırınım, renk sapması, katarakt/keratokonus gibi hastalıklar ve beynin bulanıklığa uyumu modellenmemiştir. Görme keskinliği değerleri yaklaşık tahmindir; ekranın çözünürlüğü ve izleyenin kendi görmesi sonucu etkiler (kendi gözlüğünüzle bakın).</p>
+        </div></details>
+        <details><summary>Eğitimde kullanım</summary><div>
+          <p>Optisyenlik öğrencilerine ve hastalara “reçete → görüş” ilişkisini öğretmede kullanılabilir. Örneğin ön test / son test ile kavram öğrenimi ölçülebilir; tam düzeltme, eksik düzeltme, yanlış aks ve sferik eşdeğer gibi uygulamalar görsel olarak karşılaştırılabilir.</p>
+        </div></details>
+      </div>
+    </section>
   </section>
 </main>
+</div>
+
+<footer class="alt-bilgi">
+  <p><b>Eğitim amaçlıdır.</b> Bu simülasyon tanı koymaz; görme şikâyetiniz varsa göz hekimine başvurun.</p>
+  <p>Hesaplar fiziksel optiğe (Thibos güç vektörleri, geometrik bulanıklık) dayanır.</p>
+</footer>
 
 <script>
 "use strict";
@@ -326,21 +566,25 @@ catch (e) { S = JSON.parse(JSON.stringify(VARSAYILAN)); }
 if (S.sahne === "kamera" || S.sahne === "foto") S.sahne = "esel";
 function kaydet() { try { localStorage.setItem("gozsim", JSON.stringify(S)); } catch (e) {} }
 
+const TURLER = {
+  normal: ["Normal", "#40c057"], miyop: ["Miyopi", "#4dabf7"], hiper: ["Hipermetropi", "#ff922b"],
+  astig: ["Astigmatizma", "#cc5de8"], yas: ["Presbiyopi", "#fab005"], iki: ["Anizometropi", "#20c997"]
+};
+/* ek: true → “Daha fazla örnek” altında */
 const ORNEKLER = [
-  ["", "— Hazır örnek seç —"],
-  ["emetrop", "Normal göz (emetrop)", { R: [0, 0, 180], L: [0, 0, 180] }, 25],
-  ["hafifMiyop", "Hafif miyop (−1,25)", { R: [-1.25, 0, 180], L: [-1.25, 0, 180] }, 20],
-  ["ortaMiyop", "Orta miyop (−3,50 / −3,00)", { R: [-3.5, 0, 180], L: [-3, 0, 180] }, 22],
-  ["yuksekMiyop", "Yüksek miyop (−8,00)", { R: [-8, -0.5, 180], L: [-7.5, -0.75, 170] }, 30],
-  ["gencHiper", "Genç hipermetrop (+2,50, 12 yaş)", { R: [2.5, 0, 180], L: [2.5, 0, 180] }, 12],
-  ["yasliHiper", "Yaşlı hipermetrop (+2,50, 60 yaş)", { R: [2.5, 0, 180], L: [2.5, 0, 180] }, 60],
-  ["kuralUygun", "Kurala uygun astigmat (0 −2,00 × 180)", { R: [0, -2, 180], L: [0, -2, 180] }, 25],
-  ["kuralAykiri", "Kurala aykırı astigmat (0 −2,00 × 90)", { R: [0, -2, 90], L: [0, -2, 90] }, 25],
-  ["oblik", "Oblik astigmat (−1,00 −1,50 × 45 / 135)", { R: [-1, -1.5, 45], L: [-1, -1.5, 135] }, 25],
-  ["karisik", "Karışık astigmat (+1,00 −2,50 × 180)", { R: [1, -2.5, 180], L: [1, -2.5, 180] }, 25],
-  ["aniso", "Anizometropi (Sağ −1,00 / Sol −5,00)", { R: [-1, 0, 180], L: [-5, 0, 180] }, 25],
-  ["presbiyop", "Presbiyop (emetrop, 55 yaş)", { R: [0, 0, 180], L: [0, 0, 180] }, 55],
-  ["miyopPresb", "Miyop + presbiyop (−2,00, 52 yaş)", { R: [-2, -0.5, 180], L: [-2.25, 0, 180] }, 52]
+  { id: "emetrop", tur: "normal", ad: "Normal göz", ac: "Kırma kusuru yok, her mesafe net", rx: { R: [0, 0, 180], L: [0, 0, 180] }, yas: 25 },
+  { id: "ortaMiyop", tur: "miyop", ad: "Miyop", ac: "Uzak bulanık, yakın net (−3,50 / −3,00)", rx: { R: [-3.5, 0, 180], L: [-3, 0, 180] }, yas: 22 },
+  { id: "yasliHiper", tur: "hiper", ad: "Hipermetrop · 60 yaş", ac: "Hem uzak hem yakın bulanık (+2,50)", rx: { R: [2.5, 0, 180], L: [2.5, 0, 180] }, yas: 60 },
+  { id: "kuralUygun", tur: "astig", ad: "Astigmat", ac: "Bir yöndeki çizgiler bulanık (0 −2,00 × 180)", rx: { R: [0, -2, 180], L: [0, -2, 180] }, yas: 25 },
+  { id: "presbiyop", tur: "yas", ad: "Yaşa bağlı · 55 yaş", ac: "Uzak net, yakındaki yazı bulanık", rx: { R: [0, 0, 180], L: [0, 0, 180] }, yas: 55 },
+  { id: "aniso", tur: "iki", ad: "İki göz farklı", ac: "Sağ az, sol çok miyop (−1,00 / −5,00)", rx: { R: [-1, 0, 180], L: [-5, 0, 180] }, yas: 25 },
+  { id: "hafifMiyop", tur: "miyop", ad: "Hafif miyop", ac: "Uzak biraz bulanık (−1,25)", rx: { R: [-1.25, 0, 180], L: [-1.25, 0, 180] }, yas: 20, ek: true },
+  { id: "yuksekMiyop", tur: "miyop", ad: "Yüksek miyop", ac: "Yalnızca çok yakını net görür (−8,00)", rx: { R: [-8, -0.5, 180], L: [-7.5, -0.75, 170] }, yas: 30, ek: true },
+  { id: "gencHiper", tur: "hiper", ad: "Genç hipermetrop · 12 yaş", ac: "Göz zorlanarak net görür, çabuk yorulur", rx: { R: [2.5, 0, 180], L: [2.5, 0, 180] }, yas: 12, ek: true },
+  { id: "kuralAykiri", tur: "astig", ad: "Astigmat · kurala aykırı", ac: "Diğer yöndeki çizgiler bulanık (0 −2,00 × 90)", rx: { R: [0, -2, 90], L: [0, -2, 90] }, yas: 25, ek: true },
+  { id: "oblik", tur: "astig", ad: "Oblik astigmat", ac: "Çapraz çizgiler bulanık (× 45 / 135)", rx: { R: [-1, -1.5, 45], L: [-1, -1.5, 135] }, yas: 25, ek: true },
+  { id: "karisik", tur: "astig", ad: "Karışık astigmat", ac: "Bir yönde miyop, diğerinde hipermetrop", rx: { R: [1, -2.5, 180], L: [1, -2.5, 180] }, yas: 25, ek: true },
+  { id: "miyopPresb", tur: "yas", ad: "Miyop + yaşa bağlı", ac: "Gözlüğü çıkarınca yakını net görür (52 yaş)", rx: { R: [-2, -0.5, 180], L: [-2.25, 0, 180] }, yas: 52, ek: true }
 ];
 
 /* ========================= optik hesap ========================= */
@@ -846,18 +1090,19 @@ function fovAnahtar() { return S.sahne === "sokak" || S.sahne === "foto" || S.sa
 function taboSvg(a, renk) {
   const r = 30, cx = 36, cy = 36, t = a * D2R;
   const x1 = cx + Math.cos(t) * r, y1 = cy - Math.sin(t) * r;
-  return `<svg width="72" height="42" viewBox="0 0 72 42"><path d="M6 36 A30 30 0 0 1 66 36" fill="none" stroke="#3d6474" stroke-width="2"/>
-  <line x1="6" y1="36" x2="66" y2="36" stroke="#3d6474" stroke-width="1"/>
-  <text x="2" y="41" font-size="8" fill="#7f9ca7">180</text><text x="62" y="41" font-size="8" fill="#7f9ca7">0</text><text x="31" y="5" font-size="8" fill="#7f9ca7">90</text>
-  <line x1="${cx}" y1="${cy}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${renk}" stroke-width="3" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="2.5" fill="${renk}"/></svg>`;
+  return `<svg width="72" height="42" viewBox="0 0 72 42" aria-hidden="true"><path d="M6 36 A30 30 0 0 1 66 36" fill="none" stroke="currentColor" stroke-width="2"/>
+  <line x1="6" y1="36" x2="66" y2="36" stroke="currentColor" stroke-width="1"/>
+  <g font-size="8" style="fill:var(--muted)"><text x="2" y="41">180</text><text x="62" y="41">0</text><text x="31" y="5">90</text></g>
+  <line x1="${cx}" y1="${cy}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke-width="3" stroke-linecap="round" style="stroke:${renk}"/><circle cx="${cx}" cy="${cy}" r="2.5" style="fill:${renk}"/></svg>`;
 }
 function rxKart(el, grup, k) {
-  const ad = k === "R" ? "Sağ göz (OD)" : "Sol göz (OS)";
-  const bas = grup === "eye" ? ad + " · gözün değeri" : ad + " · cam";
-  el.innerHTML = `<h3><span class="nokta"></span>${bas}</h3>
-  <div class="satir"><label>Sfer (S)</label><div class="adim" data-yol="${grup}.${k}.s" data-min="-20" data-max="20" data-adim="0.25"></div></div>
-  <div class="satir"><label>Silindir (C)</label><div class="adim" data-yol="${grup}.${k}.c" data-min="-8" data-max="8" data-adim="0.25"></div></div>
-  <div class="satir"><label>Aks</label><div class="aksSatir"><input type="range" min="1" max="180" step="1" data-aks="${grup}.${k}.a"><input type="number" min="0" max="180" data-aksn="${grup}.${k}.a"></div></div>
+  const cam = grup === "lens";
+  const ad = (k === "R" ? "Sağ " : "Sol ") + (cam ? "cam" : "göz");
+  el.innerHTML = `<h3><span class="nokta"></span>${ad} <small>${k === "R" ? "OD" : "OS"}</small></h3>
+  ${cam ? "" : `<div class="tani" data-tani="${k}"></div>`}
+  <div class="satir"><label>Sfer (S)<small>${cam ? "camın küresel gücü" : "− miyop · + hipermetrop"}</small></label><div class="adim" data-yol="${grup}.${k}.s" data-min="-20" data-max="20" data-adim="0.25"></div></div>
+  <div class="satir"><label>Silindir (C)<small>${cam ? "astigmat düzeltmesi" : "astigmat miktarı"}</small></label><div class="adim" data-yol="${grup}.${k}.c" data-min="-8" data-max="8" data-adim="0.25"></div></div>
+  <div class="satir"><label>Aks<small>${cam ? "silindirin yönü" : "astigmatın yönü"}</small></label><div class="aksSatir"><input type="range" min="1" max="180" step="1" data-aks="${grup}.${k}.a" aria-label="Aks"><input type="number" min="0" max="180" data-aksn="${grup}.${k}.a" aria-label="Aks (derece)"></div></div>
   <div class="tabo" data-tabo="${grup}.${k}"></div>
   <div class="recete" data-recete="${grup}.${k}"></div>`;
 }
@@ -866,23 +1111,33 @@ $$(".adim").forEach(adimKur);
 $$("[data-aks]").forEach(el => el.addEventListener("input", () => { yolYaz(el.dataset.aks, +el.value); guncelle(true); }));
 $$("[data-aksn]").forEach(el => el.addEventListener("change", () => { const v = sayiOku(el.value); if (v !== null) { yolYaz(el.dataset.aksn, aksNorm(clamp(v, 0, 180))); guncelle(); } }));
 
-const ornekSel = $("#ornek");
-ornekSel.innerHTML = ORNEKLER.map(o => `<option value="${o[0]}">${o[1]}</option>`).join("");
-ornekSel.addEventListener("change", () => {
-  const o = ORNEKLER.find(x => x[0] === ornekSel.value);
-  if (!o || !o[2]) return;
-  for (const k of ["R", "L"]) { const [s, c, a] = o[2][k]; S.eye[k] = { s, c, a }; S.lens[k] = { s, c, a }; }
-  S.age = o[3];
-  S.add = clamp(yuvarla025(o[3] < 40 ? 0 : (o[3] - 40) / 20 * 2 + 0.75), 0, 3);
-  S.lensKul = o[3] >= 45 ? "progresif" : "uzak";
+const ornekKap = $("#ornekler");
+ornekKap.innerHTML = ORNEKLER.map(o => `<button class="ornek${o.ek ? " ek" : ""}" data-id="${o.id}"><span class="tur"><i style="background:${TURLER[o.tur][1]}"></i>${TURLER[o.tur][0]}</span><b>${o.ad}</b><em>${o.ac}</em></button>`).join("");
+ornekKap.addEventListener("click", e => {
+  const b = e.target.closest(".ornek"); if (!b) return;
+  const o = ORNEKLER.find(x => x.id === b.dataset.id); if (!o) return;
+  for (const k of ["R", "L"]) { const [s, c, a] = o.rx[k]; S.eye[k] = { s, c, a }; S.lens[k] = { s, c, a }; }
+  S.age = o.yas;
+  S.add = clamp(yuvarla025(o.yas < 40 ? 0 : (o.yas - 40) / 20 * 2 + 0.75), 0, 3);
+  S.lensKul = o.yas >= 45 ? "progresif" : "uzak";
   S.gozluk = false;
   guncelle();
-  setTimeout(() => (ornekSel.value = ""), 400);
 });
+function ornekAcik(a) {
+  ornekKap.classList.toggle("acik", a);
+  $("#dahaOrnek").classList.toggle("acik", a);
+  $("#dahaOrnek span").textContent = a ? "Daha az göster" : "Daha fazla örnek";
+}
+$("#dahaOrnek").addEventListener("click", () => ornekAcik(!ornekKap.classList.contains("acik")));
+$("#kendiDug").addEventListener("click", () => { S.sekme = "goz"; arayuz(); kaydet(); $("#detayBlok").scrollIntoView({ behavior: "smooth", block: "start" }); });
 
 $("#gozSec").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.goz = b.dataset.v; guncelle(); } });
-$("#gozlukTgl").addEventListener("click", () => { if (S.kars) S.kars = false; S.gozluk = !S.gozluk; guncelle(); });
-$("#karsTgl").addEventListener("click", () => { S.kars = !S.kars; guncelle(); });
+$("#modSec").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.v === "kars") S.kars = true;
+  else { S.kars = false; S.gozluk = b.dataset.v === "var"; }
+  guncelle();
+});
 $("#sahneSec").addEventListener("click", e => { const b = e.target.closest("button"); if (b) sahneSec(b.dataset.v); });
 $("#mesafeSec").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.d = +b.dataset.v; guncelle(); } });
 const MIN_D = 0.2, MAX_D = 8;
@@ -935,9 +1190,16 @@ function uyumNotu(c) {
   if (c.uyum > 0.75 && c.uyum > c.A * 0.6) return ` Net görmek için uyumunun büyük kısmını (${fmtN(c.uyum)}/${fmtN(c.A)} D) kullanıyor; uzun süre bakınca yorulur.`;
   return "";
 }
-function kisaOzet(c) {
-  const [s] = vaSinif(c.va);
-  return `${gozAdi(c.k)} ${c.g ? "gözlükle" : "gözlüksüz"}, ${mesafeYaz(c.d)}: ${s} (≈${vaYaz(c.va)}).` + cizgiNotu(c) + uyumNotu(c);
+const buyukBas = t => t[0].toUpperCase() + t.slice(1);
+/* özet kutusunda bir satır: göz etiketi · durum · görme rozeti */
+function ozetSatir(etiket, sinif, metin, va, not) {
+  const [, r] = vaSinif(va);
+  return `<div class="oz"><span class="oz-goz ${sinif}">${etiket}</span><div class="oz-metin">${metin}${not ? `<small>${not}</small>` : ""}</div><span class="rozet ${r}">${vaYaz(va)}</span></div>`;
+}
+function gozOzet(c, durumYaz) {
+  const s = vaSinif(c.va)[0];
+  const metin = durumYaz ? `<b>${c.g ? "Gözlüklü" : "Gözlüksüz"}</b> · ${s}` : `<b>${buyukBas(s)}</b>`;
+  return ozetSatir(c.k === "R" ? "Sağ" : "Sol", c.k === "R" ? "od" : "os", metin, c.va, (cizgiNotu(c) + uyumNotu(c)).trim());
 }
 function netAralik(pr, A) {
   const tol = 0.25, M = pr.M;
@@ -1022,13 +1284,18 @@ function iki_gozMetni() {
 
 /* ========================= güncelleme ========================= */
 function arayuz() {
-  $$("#gozSec button").forEach(b => b.classList.toggle("on", b.dataset.v === S.goz));
-  $$("#sahneSec button").forEach(b => b.classList.toggle("on", b.dataset.v === S.sahne));
-  $$("#mesafeSec button").forEach(b => b.classList.toggle("on", Math.abs(+b.dataset.v - S.d) < 0.001));
-  $$("#sekmeler button").forEach(b => b.classList.toggle("on", b.dataset.v === S.sekme));
+  const bas = (sec, f) => $$(sec).forEach(b => { const on = f(b); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+  bas("#gozSec button", b => b.dataset.v === S.goz);
+  bas("#sahneSec button", b => b.dataset.v === S.sahne);
+  bas("#mesafeSec button", b => Math.abs(+b.dataset.v - S.d) < 0.001);
+  bas("#sekmeler button", b => b.dataset.v === S.sekme);
+  const mod = S.kars ? "kars" : S.gozluk ? "var" : "yok";
+  bas("#modSec button", b => b.dataset.v === mod);
+  const esit = (r, v) => Math.abs(r.s - v[0]) < 0.01 && Math.abs(r.c - v[1]) < 0.01 && (Math.abs(v[1]) < 0.01 || aksNorm(r.a) === aksNorm(v[2]));
+  bas(".ornek", b => { const o = ORNEKLER.find(x => x.id === b.dataset.id); return !!o && S.age === o.yas && esit(S.eye.R, o.rx.R) && esit(S.eye.L, o.rx.L); });
   $$(".sayfa").forEach(s => s.classList.toggle("on", s.id === "s-" + S.sekme));
-  $("#gozlukTgl").classList.toggle("on", S.gozluk && !S.kars);
-  $("#karsTgl").classList.toggle("on", S.kars);
+  $("#tuval").classList.toggle("kars", S.kars);
+  $$("[data-tani]").forEach(el => { el.textContent = buyukBas(sinifla(S.eye[el.dataset.tani]).tip); });
   const mk = $("#mesafeKaydir"); if (document.activeElement !== mk) mk.value = dToKaydir(clamp(S.d, MIN_D, MAX_D));
   $("#mesafeYaz").textContent = mesafeYaz(S.d);
   $("#lensTur").value = S.lensTur; $("#lensKul").value = S.lensKul; $("#kalite").value = String(S.kalite);
@@ -1036,10 +1303,10 @@ function arayuz() {
   $$(".adim").forEach(el => el._goster && el._goster());
   $$("[data-aks]").forEach(el => { if (document.activeElement !== el) el.value = aksNorm(yolAl(el.dataset.aks)); });
   $$("[data-aksn]").forEach(el => { if (document.activeElement !== el) el.value = aksNorm(yolAl(el.dataset.aksn)); });
-  $$("[data-tabo]").forEach(el => { const r = yolAl(el.dataset.tabo); el.innerHTML = Math.abs(r.c) > 0.01 ? taboSvg(aksNorm(r.a), el.dataset.tabo.endsWith("R") ? "#ff8a65" : "#64b5f6") + "<span>Aks " + aksNorm(r.a) + "° (TABO, karşıdan bakış)</span>" : "<span>Silindir yok – aks kullanılmaz</span>"; });
+  $$("[data-tabo]").forEach(el => { const r = yolAl(el.dataset.tabo); el.innerHTML = Math.abs(r.c) > 0.01 ? taboSvg(aksNorm(r.a), el.dataset.tabo.endsWith("R") ? "var(--od)" : "var(--os)") + "<span>Aks " + aksNorm(r.a) + "° (TABO, karşıdan bakış)</span>" : "<span>Silindir yok – aks kullanılmaz</span>"; });
   $$("[data-recete]").forEach(el => { const r = yolAl(el.dataset.recete); el.textContent = fmtRx(r) + (Math.abs(r.c) > 0.01 ? "   ⇄  " + fmtRx(transpoz(r)) : "") + "   SE " + fmtD(r.s + r.c / 2); });
   const A = amax();
-  $("#uyumNot").textContent = `Uyum (akomodasyon) gücü ≈ ${fmtN(A, 1)} D → yakın nokta (emetrop gözde) ≈ ${Math.round(100 / A)} cm.${S.age >= 42 ? " Presbiyopi yaşı: yakın için Add gerekebilir." : ""}`;
+  $("#uyumNot").textContent = `Bu yaşta gözün yakına odaklanma (uyum) gücü ≈ ${fmtN(A, 1)} D; normal bir göz en yakın ≈ ${Math.round(100 / A)} cm’yi net görebilir.${S.age >= 42 ? " Presbiyopi yaşı: yakın için okuma ilavesi (Add) gerekebilir." : ""}`;
   $("#lensNot").textContent = S.lensTur === "kontak"
     ? "Kontak lens göz üstünde durur; değerler korneadaki güçtür. Yüksek derecelerde gözlük değerinden farklıdır (verteks dönüşümü). Görüntü boyu neredeyse değişmez."
     : `Gözlük camı gözden ${S.vertex} mm önde kabul edilir. Eksi cam görüntüyü küçültür, artı cam büyütür.` + (S.lensKul === "progresif" ? " Progresifte yakına bakınca Add tam, orta mesafede kısmen, uzakta hiç eklenmez." : S.lensKul === "okuma" ? " Okuma gözlüğüyle uzağa bakınca Add yüzünden uzak bulanıklaşır." : "");
@@ -1052,44 +1319,79 @@ function etiketler() {
     const R = durum("R", g, S.d), L = durum("L", g, S.d);
     const va = S.goz === "R" ? R.va : S.goz === "L" ? L.va : binokulerVA(R, L);
     const mar = S.goz === "R" ? R.mar : S.goz === "L" ? L.mar : 1 / va;
-    const [s, r] = vaSinif(va);
-    const renk = r === "r-ok" ? "#7bd88f" : r === "r-warn" ? "#ffb74d" : "#ff8a87";
-    return `<span style="color:${renk}">≈ ${vaYaz(va)} · ${snellen(mar)}</span>`;
+    const r = vaSinif(va)[1];
+    const renk = r === "r-ok" ? "#7bd88f" : r === "r-warn" ? "#ffc857" : "#ff8a87";
+    return `<span style="color:${renk}">●</span> Görme ≈ ${vaYaz(va)}<small> · ${snellen(mar)}</small>`;
   };
   const m = mesafeYaz(S.d);
   if (S.kars) {
-    $("#etA").innerHTML = `<b>${ad}</b> · gözlüksüz · ${m}`;
-    $("#etB").innerHTML = `gözlüklü 👓`;
+    $("#etA").innerHTML = `<b>Gözlüksüz</b> · ${m}`;
+    $("#etB").innerHTML = `<b>Gözlüklü</b>`;
     $("#vaA").innerHTML = vaMetin(false); $("#vaB").innerHTML = vaMetin(true);
     $("#etB").classList.remove("gizli"); $("#vaB").classList.remove("gizli");
   } else {
-    $("#etA").innerHTML = `<b>${ad}</b> · ${S.gozluk ? "gözlüklü 👓" : "gözlüksüz"} · ${m}`;
+    $("#etA").innerHTML = `<b>${ad}</b> · ${S.gozluk ? "gözlüklü" : "gözlüksüz"} · ${m}`;
     $("#vaA").innerHTML = vaMetin(S.gozluk);
     $("#etB").classList.add("gizli"); $("#vaB").classList.add("gizli");
   }
-  const parca = [];
-  const gl2 = S.kars ? [false, true] : [S.gozluk];
-  for (const g of gl2) for (const k of (S.goz === "B" ? ["R", "L"] : [S.goz])) parca.push(kisaOzet(durum(k, g, S.d)));
-  if (S.goz === "B" && !S.kars) {
-    const R = durum("R", S.gozluk, S.d), L = durum("L", S.gozluk, S.d);
-    parca.push(`<b>İki göz birlikte</b> ≈${vaYaz(binokulerVA(R, L))}.`);
+  let h = "";
+  for (const g of (S.kars ? [false, true] : [S.gozluk])) {
+    if (S.kars) h += `<div class="oz-grup"><svg class="ik"><use href="#i-${g ? "glasses" : "eye"}"/></svg>${g ? "Gözlüklü" : "Gözlüksüz"}</div>`;
+    for (const k of (S.goz === "B" ? ["R", "L"] : [S.goz])) h += gozOzet(durum(k, g, S.d), !S.kars);
+    if (S.goz === "B") {
+      const va = binokulerVA(durum("R", g, S.d), durum("L", g, S.d)), s = vaSinif(va)[0];
+      h += ozetSatir("İki", "iki", S.kars ? `<b>İki göz birlikte</b> · ${s}` : `<b>İki göz birlikte</b> · ${g ? "gözlüklü" : "gözlüksüz"}, ${s}`, va, "");
+    }
   }
-  $("#ozet").innerHTML = parca.join("<br>");
+  $("#ozet").innerHTML = h;
+  $("#ozetMesafe").textContent = `${m} uzağa bakarken`;
 }
 
 function guncelle(t) {
   arayuz();
   etiketler();
-  if (S.sekme === "aciklama" || !t) $("#aciklama").innerHTML = gozMetni("R") + gozMetni("L") + iki_gozMetni() + tabloMetni();
+  if (S.sekme === "aciklama" || !t) $("#aciklama").innerHTML = raporHTML();
   kaydet();
   if (S.sahne !== "kamera") iste(t);
 }
+function raporHTML() {
+  return `<div class="kart rapor od">${gozMetni("R")}</div><div class="kart rapor os">${gozMetni("L")}</div>` +
+    `<div class="kart rapor">${iki_gozMetni()}</div><div class="kart rapor">${tabloMetni()}</div>`;
+}
 const eskiSekme = $("#sekmeler");
-eskiSekme.addEventListener("click", () => { if (S.sekme === "aciklama") $("#aciklama").innerHTML = gozMetni("R") + gozMetni("L") + iki_gozMetni() + tabloMetni(); });
+eskiSekme.addEventListener("click", () => { if (S.sekme === "aciklama") $("#aciklama").innerHTML = raporHTML(); });
 
-window.addEventListener("resize", () => iste());
+/* ========================= tema · rehber ========================= */
+const temaMQ = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+const temaEtkin = () => document.documentElement.getAttribute("data-theme") || (temaMQ && temaMQ.matches ? "dark" : "light");
+function temaIkon() {
+  const u = $("#temaDug use"), id = temaEtkin() === "dark" ? "#i-sun" : "#i-moon";
+  u.setAttribute("href", id); u.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", id);
+}
+$("#temaDug").addEventListener("click", () => {
+  const yeni = temaEtkin() === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", yeni);
+  try { localStorage.setItem("gozsim_tema", yeni); } catch (e) {}
+  temaIkon();
+});
+if (temaMQ && temaMQ.addEventListener) temaMQ.addEventListener("change", temaIkon);
+temaIkon();
+
+const rehber = $("#rehber");
+try { if (localStorage.getItem("gozsim_rehber") === "1") rehber.classList.add("gizli"); } catch (e) {}
+function rehberKapat() { rehber.classList.add("gizli"); try { localStorage.setItem("gozsim_rehber", "1"); } catch (e) {} }
+$("#rehberTamam").addEventListener("click", rehberKapat);
+$("#rehberKapat").addEventListener("click", rehberKapat);
+$("#yardimDug").addEventListener("click", () => { rehber.classList.remove("gizli"); rehber.scrollIntoView({ behavior: "smooth", block: "start" }); });
+
+/* telefonda yapışkan görüntünün yüksekliği (kaydırma payı için) */
+function yapiskan() { document.documentElement.style.setProperty("--yapiskan", $("#sahneKap").offsetHeight + "px"); }
+
+window.addEventListener("resize", () => { yapiskan(); iste(); });
 try { glKur(); } catch (e) { $("#glHata").style.display = "grid"; $("#glHata").textContent = "Grafik hatası: " + e.message; console.error(e); }
 sahneYenile();
+yapiskan();
+if ($(".ornek.ek.on")) ornekAcik(true);
 </script>
 </body>
 </html>
