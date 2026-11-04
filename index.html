@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" data-bs-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -7,503 +7,398 @@
 <meta name="description" content="Miyopi, hipermetropi, astigmatizma ve presbiyopisi olan bir gözün dünyayı gözlüklü ve gözlüksüz nasıl gördüğünü canlı gösteren eğitim simülatörü.">
 <meta property="og:title" content="Göz Simülatörü">
 <meta property="og:description" content="Kırma kusurlarını gözlüklü ve gözlüksüz görün: miyopi, hipermetropi, astigmatizma, presbiyopi.">
-<meta name="theme-color" content="#f2f5f9" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2314b8a6'/%3E%3Cstop offset='1' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M10 32s8-14 22-14 22 14 22 14-8 14-22 14-22-14-22-14z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='32' r='7' fill='white'/%3E%3C/svg%3E">
-<script>try{var t=localStorage.getItem("gozsim_tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0b1a22">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231fb5a8'/%3E%3Cpath d='M10 32s8-14 22-14 22 14 22 14-8 14-22 14-22-14-22-14z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='32' r='7' fill='white'/%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("gozsim_tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-bs-theme",t);}catch(e){}</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
-:root{
-  color-scheme:light;
-  --bg:#f2f5f9;--surface:#fff;--surface2:#f5f8fb;--surface3:#e9eff6;
-  --line:#e1e7ef;--line2:#cbd5e1;
-  --text:#0f172a;--muted:#5b6b80;--faint:#8494a8;
-  --accent:#0f766e;--accent-ink:#fff;--accent-soft:#e0f5f2;--accent-text:#0f766e;
-  --od:#c2410c;--od-ink:#fff;--od-soft:#fff1e8;
-  --os:#1d6fc0;--os-ink:#fff;--os-soft:#e8f1fb;
-  --ok:#1f7a33;--ok-soft:#e5f5e9;--warn:#a85a00;--warn-soft:#fff3dc;--bad:#c92a2a;--bad-soft:#fde8e8;
-  --shadow:0 1px 2px rgba(15,23,42,.05),0 2px 10px rgba(15,23,42,.05);
-  --shadow-lg:0 14px 40px -12px rgba(15,23,42,.35);
-  --stage:#1e293b;--r:16px;
+/* ---------- renkler (koyu = eski turkuaz tema) ---------- */
+:root,[data-bs-theme=light]{
+  --bs-body-bg:#eef2f6;--bs-body-bg-rgb:238,242,246;
+  --bs-tertiary-bg:#fff;--bs-tertiary-bg-rgb:255,255,255;
+  --bs-secondary-bg:#e6ecf2;--bs-secondary-bg-rgb:230,236,242;
+  --bs-border-color:#d5dee8;
+  --bs-primary:#0f8f84;--bs-primary-rgb:15,143,132;
+  --bs-link-color:#0f766e;--bs-link-color-rgb:15,118,110;--bs-link-hover-color:#0b5d56;--bs-link-hover-color-rgb:11,93,86;
+  --acc:#0f8f84;--acc-ink:#fff;--acc-bg:rgba(15,143,132,.10);
+  --od:#c2410c;--od-ink:#fff;--od-bg:rgba(194,65,12,.10);
+  --os:#1d6fc0;--os-ink:#fff;--os-bg:rgba(29,111,192,.10);
+  --ok:#1f7a33;--ok-bg:#e3f4e7;--warn:#a85a00;--warn-bg:#fff1d6;--bad:#c92a2a;--bad-bg:#fde6e6;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  color-scheme:dark;
-  --bg:#0b1120;--surface:#121a2c;--surface2:#172238;--surface3:#1d2a44;
-  --line:#22304a;--line2:#33446a;
-  --text:#e8eef7;--muted:#9babc0;--faint:#6f7f96;
-  --accent:#2dd4bf;--accent-ink:#042f2a;--accent-soft:rgba(45,212,191,.13);--accent-text:#5eead4;
-  --od:#ff8f5e;--od-ink:#2b0e02;--od-soft:rgba(255,143,94,.14);
-  --os:#60a5fa;--os-ink:#04172e;--os-soft:rgba(96,165,250,.14);
-  --ok:#5bd377;--ok-soft:rgba(91,211,119,.13);--warn:#fcc419;--warn-soft:rgba(252,196,25,.13);--bad:#ff7b7b;--bad-soft:rgba(255,123,123,.14);
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 18px rgba(0,0,0,.22);
-  --shadow-lg:0 16px 50px -12px rgba(0,0,0,.7);
-  --stage:#0f172a;
-}}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#0b1120;--surface:#121a2c;--surface2:#172238;--surface3:#1d2a44;
-  --line:#22304a;--line2:#33446a;
-  --text:#e8eef7;--muted:#9babc0;--faint:#6f7f96;
-  --accent:#2dd4bf;--accent-ink:#042f2a;--accent-soft:rgba(45,212,191,.13);--accent-text:#5eead4;
-  --od:#ff8f5e;--od-ink:#2b0e02;--od-soft:rgba(255,143,94,.14);
-  --os:#60a5fa;--os-ink:#04172e;--os-soft:rgba(96,165,250,.14);
-  --ok:#5bd377;--ok-soft:rgba(91,211,119,.13);--warn:#fcc419;--warn-soft:rgba(252,196,25,.13);--bad:#ff7b7b;--bad-soft:rgba(255,123,123,.14);
-  --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 18px rgba(0,0,0,.22);
-  --shadow-lg:0 16px 50px -12px rgba(0,0,0,.7);
-  --stage:#0f172a;
+[data-bs-theme=dark]{
+  --bs-body-bg:#0b1a22;--bs-body-bg-rgb:11,26,34;
+  --bs-body-color:#e8f3f6;--bs-body-color-rgb:232,243,246;
+  --bs-emphasis-color:#fff;--bs-emphasis-color-rgb:255,255,255;
+  --bs-secondary-color:rgba(157,184,194,1);--bs-secondary-color-rgb:157,184,194;
+  --bs-tertiary-color:rgba(157,184,194,.7);--bs-tertiary-color-rgb:157,184,194;
+  --bs-secondary-bg:#163140;--bs-secondary-bg-rgb:22,49,64;
+  --bs-tertiary-bg:#11252f;--bs-tertiary-bg-rgb:17,37,47;
+  --bs-border-color:#24485a;--bs-border-color-translucent:rgba(36,72,90,.85);
+  --bs-primary:#1fb5a8;--bs-primary-rgb:31,181,168;
+  --bs-link-color:#4fd1c5;--bs-link-color-rgb:79,209,197;--bs-link-hover-color:#86e3da;--bs-link-hover-color-rgb:134,227,218;
+  --acc:#1fb5a8;--acc-ink:#04201d;--acc-bg:rgba(31,181,168,.14);
+  --od:#ff8a65;--od-ink:#2a0d02;--od-bg:rgba(255,138,101,.15);
+  --os:#64b5f6;--os-ink:#03182a;--os-bg:rgba(100,181,246,.15);
+  --ok:#7bd88f;--ok-bg:rgba(123,216,143,.15);--warn:#ffc857;--warn-bg:rgba(255,200,87,.15);--bad:#ff8a87;--bad-bg:rgba(239,83,80,.2);
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-html,body{margin:0}
-body{overflow-x:clip;min-height:100vh;color:var(--text);background:radial-gradient(1100px 420px at 0% -8%,rgba(20,184,166,.13),transparent 60%),radial-gradient(900px 420px at 100% -8%,rgba(37,99,235,.10),transparent 60%),var(--bg);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
-button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
-input,select{font:inherit}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.ik{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+:root{--muted:var(--bs-secondary-color)}
+body{-webkit-tap-highlight-color:transparent}
+.text-primary{color:var(--acc)!important}
+.btn-primary{--bs-btn-bg:var(--acc);--bs-btn-border-color:var(--acc);--bs-btn-color:var(--acc-ink);--bs-btn-hover-bg:var(--acc);--bs-btn-hover-border-color:var(--acc);--bs-btn-hover-color:var(--acc-ink);--bs-btn-active-bg:var(--acc);--bs-btn-active-border-color:var(--acc);--bs-btn-active-color:var(--acc-ink)}
+.btn-primary:hover{filter:brightness(1.08)}
+/* seçim düğmeleri: seçili olan turkuaz */
+.btn-secim{--bs-btn-color:var(--bs-body-color);--bs-btn-bg:var(--bs-tertiary-bg);--bs-btn-border-color:var(--bs-border-color);--bs-btn-hover-color:var(--bs-emphasis-color);--bs-btn-hover-bg:var(--bs-secondary-bg);--bs-btn-hover-border-color:var(--bs-border-color);--bs-btn-active-color:var(--acc-ink);--bs-btn-active-bg:var(--acc);--bs-btn-active-border-color:var(--acc);--bs-btn-focus-shadow-rgb:var(--bs-primary-rgb)}
+#gozSec .btn[data-v=R]{--bs-btn-active-bg:var(--od);--bs-btn-active-border-color:var(--od);--bs-btn-active-color:var(--od-ink)}
+#gozSec .btn[data-v=L]{--bs-btn-active-bg:var(--os);--bs-btn-active-border-color:var(--os);--bs-btn-active-color:var(--os-ink)}
+.form-control:focus,.form-select:focus{border-color:var(--acc);box-shadow:0 0 0 .2rem var(--acc-bg)}
+.form-range::-webkit-slider-thumb{background-color:var(--acc)}
+.form-range::-moz-range-thumb{background-color:var(--acc)}
+.form-range:focus::-webkit-slider-thumb{box-shadow:0 0 0 1px var(--bs-body-bg),0 0 0 .25rem var(--acc-bg)}
+.nav-pills{--bs-nav-pills-link-active-bg:var(--acc);--bs-nav-pills-link-active-color:var(--acc-ink);--bs-nav-link-color:var(--bs-secondary-color);--bs-nav-link-hover-color:var(--bs-body-color)}
+.accordion{--bs-accordion-bg:var(--bs-tertiary-bg);--bs-accordion-active-bg:var(--bs-secondary-bg);--bs-accordion-active-color:var(--bs-body-color);--bs-accordion-btn-focus-box-shadow:none;--bs-accordion-border-color:var(--bs-border-color)}
+.card{--bs-card-bg:var(--bs-tertiary-bg);--bs-card-cap-bg:transparent}
+.list-group{--bs-list-group-bg:transparent}
 .gizli{display:none!important}
 
-/* üst bar */
-.ust{display:flex;align-items:center;gap:12px;max-width:1600px;margin:0 auto;padding:16px 20px 12px}
-.marka{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.marka>div{min-width:0}
-.logo{flex:0 0 auto;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#14b8a6,#2563eb);box-shadow:0 6px 18px -4px rgba(37,99,235,.45)}
-.logo .ik{width:24px;height:24px;stroke-width:2.2}
-h1{margin:0;font-size:19px;line-height:1.2;font-weight:800;letter-spacing:-.02em}
-.marka small{display:block;margin-top:2px;color:var(--muted);font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ust-dug{display:flex;gap:8px;flex:0 0 auto}
-.ikon-dug{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--muted);box-shadow:var(--shadow);transition:color .15s,border-color .15s}
-.ikon-dug:hover{color:var(--text);border-color:var(--line2)}
-.ikon-dug.metinli{width:auto;display:flex;align-items:center;gap:7px;padding:0 14px;font-size:13.5px;font-weight:600}
-.ikon-dug.kucuk{width:32px;height:32px;border-radius:10px;border-color:transparent;background:transparent;box-shadow:none}
-
-/* düzen */
-.duzen{max-width:1600px;margin:0 auto}
-.sol{display:contents}
-#sahneKap{position:sticky;top:0;z-index:5;padding:8px 12px 10px;background:var(--bg);background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+/* üst çubuk */
+.logo{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--acc);color:var(--acc-ink);font-size:20px;flex:0 0 auto}
+.marka-alt{font-size:.75rem;line-height:1.1}
 
 /* sahne */
-#tuval{position:relative;width:100%;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:var(--stage);box-shadow:var(--shadow-lg);touch-action:pan-y}
+.sol,.sag{padding:12px}
+#sahneKap{background:var(--bs-body-bg)}
+#tuval{position:relative;width:100%;aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:#222;touch-action:pan-y;border:1px solid var(--bs-border-color)}
 #tuval.kars{touch-action:none;cursor:ew-resize}
 #tuval canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.etiket,.va{position:absolute;max-width:calc(50% - 16px);padding:5px 11px;border-radius:999px;font-size:12.5px;line-height:1.35;font-weight:600;color:#fff;background:rgba(15,23,42,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.2);pointer-events:none}
-.etiket b{font-weight:800}
-.etiket{top:10px} #etA{left:10px} #etB{right:10px;text-align:right}
-.va{bottom:10px;font-weight:700} #vaA{left:10px} #vaB{right:10px;text-align:right}
-.va small{font-size:11.5px;font-weight:600;opacity:.75;margin-left:2px}
-#bolucu{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #fff;box-shadow:0 0 10px rgba(0,0,0,.45);pointer-events:none;display:none}
-#bolucu::after{content:"";position:absolute;top:50%;left:-20px;width:38px;height:38px;margin-top:-19px;border-radius:50%;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 6-6 6 6 6M15 6l6 6-6 6'/%3E%3C/svg%3E") center/20px no-repeat;box-shadow:0 3px 12px rgba(0,0,0,.35)}
-#glHata{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;color:#fff;background:#3a1d1d}
-
-/* hızlı seçim çubukları */
-.hizli{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
-.seg{display:flex;gap:2px;min-width:0;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-.seg button{flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 6px;border:0;border-radius:10px;background:none;color:var(--muted);font-size:13.5px;font-weight:600;white-space:nowrap;transition:background .15s,color .15s}
-.seg button .ik{width:16px;height:16px}
-.seg button:hover{color:var(--text);background:var(--surface2)}
-.seg button.on{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px -2px rgba(15,118,110,.5)}
-.seg button[data-v="R"].on{background:var(--od);color:var(--od-ink);box-shadow:none}
-.seg button[data-v="L"].on{background:var(--os);color:var(--os-ink);box-shadow:none}
-.d{width:8px;height:8px;border-radius:50%;flex:0 0 auto;display:inline-block}
+.etiket,.va{position:absolute;max-width:calc(50% - 14px);padding:3px 9px;border-radius:8px;font-size:12.5px;line-height:1.35;font-weight:600;color:#fff;background:rgba(10,25,32,.8);pointer-events:none}
+.etiket{top:8px} #etA{left:8px} #etB{right:8px;text-align:right}
+.va{bottom:8px;font-weight:700} #vaA{left:8px} #vaB{right:8px;text-align:right}
+.va small{font-size:11.5px;font-weight:600;opacity:.8}
+#bolucu{position:absolute;top:0;bottom:0;width:0;border-left:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none;display:none}
+#bolucu::after{content:"\21D4";position:absolute;top:50%;left:-18px;width:34px;height:34px;margin-top:-17px;border-radius:50%;background:#fff;color:#0b1a22;display:grid;place-items:center;font-weight:800;font-size:17px;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+#glHata{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:20px;color:#fff;background:#3a1d1d}
+.hizli{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hizli .btn-group{flex:1 1 300px}
+.hizli .btn{flex:1 1 0;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:.4rem .4rem;font-size:.875rem;font-weight:600;white-space:nowrap}
+.d{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
 .d.od{background:var(--od)} .d.os{background:var(--os)} .d.iki{background:linear-gradient(90deg,var(--od) 50%,var(--os) 50%)}
-.seg button.on .d{background:currentColor}
-
-/* kartlar */
-.kart{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
-.kart-bas{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
-.kart-bas h2,.kart h3{margin:0;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
-.kart-bas h2 .ik{color:var(--accent-text)}
-.kart h3 small{font-size:12px;font-weight:600;color:var(--muted)}
+.btn.active .d{background:currentColor}
 
 /* özet */
-#ozetKart{margin:2px 12px 16px}
-.ozet-olcek{font-size:12.5px;color:var(--muted);font-weight:500;text-align:right}
-.oz{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
-.oz:first-child,.oz-grup+.oz{border-top:0}
-.oz-goz{display:flex;justify-content:center;padding:2px 0;border-radius:8px;font-size:12px;font-weight:700}
-.oz-goz.od{background:var(--od-soft);color:var(--od)} .oz-goz.os{background:var(--os-soft);color:var(--os)} .oz-goz.iki{background:var(--accent-soft);color:var(--accent-text)}
-.oz-metin{font-size:13.5px;line-height:1.45}
-.oz-metin small{display:block;margin-top:2px;color:var(--muted);font-size:12.5px}
-.oz-grup{display:flex;align-items:center;gap:6px;margin:12px 0 2px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.oz-grup:first-child{margin-top:0}
-.oz-grup .ik{width:15px;height:15px}
-.olcek-not{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted)}
-.rozet{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
-.r-ok{background:var(--ok-soft);color:var(--ok)} .r-warn{background:var(--warn-soft);color:var(--warn)} .r-bad{background:var(--bad-soft);color:var(--bad)}
+#ozetKart .card-header{font-size:.95rem}
+.oz{display:flex;align-items:flex-start;gap:10px;padding:.45rem .9rem;font-size:.875rem}
+.oz+.oz{border-top:1px solid var(--bs-border-color)}
+.oz-metin{flex:1 1 auto;min-width:0;line-height:1.4}
+.oz-metin small{display:block;color:var(--bs-secondary-color);margin-top:1px}
+.oz-goz{flex:0 0 40px;text-align:center;border-radius:6px;padding:1px 0;font-size:.75rem;font-weight:700}
+.oz-goz.od{background:var(--od-bg);color:var(--od)} .oz-goz.os{background:var(--os-bg);color:var(--os)} .oz-goz.iki{background:var(--acc-bg);color:var(--acc)}
+.oz-grup{padding:.4rem .9rem .1rem;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bs-secondary-color)}
+.rozet{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.r-ok{background:var(--ok-bg);color:var(--ok)} .r-warn{background:var(--warn-bg);color:var(--warn)} .r-bad{background:var(--bad-bg);color:var(--bad)}
 span.od{color:var(--od);font-weight:700} span.os{color:var(--os);font-weight:700}
 
 /* sağ panel */
-.sag{padding:0 12px 8px}
-.blok{margin-bottom:22px}
-.blok-bas{display:flex;align-items:center;gap:10px;margin:0 2px 10px;font-size:16px;font-weight:750;letter-spacing:-.01em}
-.blok-bas .no{width:26px;height:26px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);font-size:13px;font-weight:800}
-.blok-bas small{margin-left:auto;font-size:12.5px;font-weight:500;color:var(--muted)}
-
-.rehber{border-color:transparent;background:linear-gradient(135deg,var(--accent-soft),var(--os-soft)),var(--surface);margin-bottom:22px}
-.adimlar{margin:6px 0 4px;padding:0;list-style:none;counter-reset:a}
-.adimlar li{counter-increment:a;position:relative;padding:5px 0 5px 34px;font-size:14px;line-height:1.5}
-.adimlar li::before{content:counter(a);position:absolute;left:0;top:5px;width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:12.5px;font-weight:800}
-
-.ornekler{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.ornek{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0;padding:11px 12px;text-align:left;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);transition:border-color .15s,transform .15s,background .15s}
-.ornek:hover{border-color:var(--line2);transform:translateY(-1px)}
-.ornek .tur{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.ornek .tur i{width:8px;height:8px;border-radius:50%}
-.ornek b{font-size:14px;font-weight:700;line-height:1.3}
-.ornek em{font-style:normal;font-size:12.5px;line-height:1.35;color:var(--muted)}
-.ornek.on{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
-.ornek.ek{display:none}
-.ornekler.acik .ornek.ek{display:flex}
-.alt-dug{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:8px}
-.metin-dug{display:inline-flex;align-items:center;gap:6px;padding:6px 4px;border:0;background:none;color:var(--accent-text);font-size:13.5px;font-weight:650}
-.metin-dug .ik{width:16px;height:16px;transition:transform .2s}
-.metin-dug.acik .ik{transform:rotate(180deg)}
-
+.adim-no{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;flex:0 0 auto;background:var(--acc);color:var(--acc-ink);font-size:.8rem;font-weight:800}
+.kart-baslik{display:flex;align-items:center;gap:8px;font-weight:600;font-size:1rem;margin-bottom:.6rem}
+.rehber{background:var(--acc-bg);border:1px solid color-mix(in srgb,var(--acc) 40%,transparent);color:var(--bs-body-color)}
+.rehber ol{padding-left:1.2rem;margin:.4rem 0}
+.rehber li{margin:.2rem 0}
 .secim{display:grid;gap:8px}
 .secim.uc{grid-template-columns:repeat(3,minmax(0,1fr))}
 .secim.dort{grid-template-columns:repeat(4,minmax(0,1fr))}
-.secim button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0;padding:12px 4px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--text);box-shadow:var(--shadow);font-size:13px;font-weight:600;line-height:1.2;text-align:center;transition:border-color .15s,background .15s}
-.secim button .ik{width:22px;height:22px;color:var(--muted)}
-.secim button small{font-size:11.5px;font-weight:500;color:var(--muted)}
-.secim button:hover{border-color:var(--line2)}
-.secim button.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-text);box-shadow:inset 0 0 0 1px var(--accent)}
-.secim button.on .ik,.secim button.on small{color:var(--accent-text)}
-.mesafe{display:flex;align-items:center;gap:12px;margin-top:8px;padding:8px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-.mesafe>.ik{color:var(--muted)}
-.mesafe output{min-width:58px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
-input[type=range]{flex:1;min-width:0;height:28px;margin:0;accent-color:var(--accent)}
-
-.sekmeler{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:4px;margin-bottom:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
-.sekmeler button{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:8px 2px 7px;border:0;border-radius:12px;background:none;color:var(--muted);font-size:12.5px;font-weight:600;transition:background .15s,color .15s}
-.sekmeler button:hover{color:var(--text)}
-.sekmeler button.on{background:var(--accent-soft);color:var(--accent-text)}
-.sayfa{display:none}
-.sayfa.on{display:block;animation:belir .2s ease}
-@keyframes belir{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-/* reçete kartları */
+.secim .btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:.5rem .25rem;font-size:.82rem;font-weight:600;line-height:1.2;min-width:0}
+.secim .btn .bi{font-size:1.2rem}
+.secim .btn small{font-weight:500;opacity:.8;font-size:.72rem}
+.sekmeler .nav-link{display:flex;flex-direction:column;align-items:center;gap:1px;padding:.4rem .2rem;font-size:.8rem;font-weight:600}
+.sekmeler .nav-link .bi{font-size:1.1rem}
+.sayfa{display:none} .sayfa.on{display:block}
+.adim .btn{width:42px;font-size:1.15rem;font-weight:700;padding-left:0;padding-right:0}
+.adim .form-control{font-weight:700;font-size:1.05rem;text-align:center;min-width:0}
+.kart-od{border-top:3px solid var(--od)!important} .kart-os{border-top:3px solid var(--os)!important}
 .nokta{width:10px;height:10px;border-radius:50%;display:inline-block}
-.kart.od{box-shadow:inset 0 3px 0 var(--od),var(--shadow)} .kart.os{box-shadow:inset 0 3px 0 var(--os),var(--shadow)}
-.kart.od h3 .nokta{background:var(--od)} .kart.os h3 .nokta{background:var(--os)}
-.tani{display:inline-block;margin:8px 0 2px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600}
-.kart.od .tani{background:var(--od-soft);color:var(--od)} .kart.os .tani{background:var(--os-soft);color:var(--os)}
-.satir{display:grid;grid-template-columns:108px minmax(0,1fr);align-items:center;gap:10px;margin:9px 0}
-.satir>*{min-width:0}
-.satir label{font-size:13.5px;font-weight:650;line-height:1.25}
-.satir label small{display:block;margin-top:2px;font-size:11.5px;font-weight:500;color:var(--muted)}
-.adim{display:flex;align-items:center;gap:6px}
-.adim button{width:42px;height:42px;flex:0 0 auto;display:grid;place-items:center;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);font-size:20px;font-weight:600;transition:background .12s}
-.adim button:hover{background:var(--surface3)}
-.adim button:active{transform:scale(.96)}
-.adim input,.aksSatir input[type=number]{height:42px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);text-align:center;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
-.adim input{flex:1;min-width:0}
-.aksSatir{display:flex;align-items:center;gap:10px}
-.aksSatir input[type=number]{width:68px;flex:0 0 auto;-moz-appearance:textfield;appearance:textfield}
-.aksSatir input::-webkit-outer-spin-button,.aksSatir input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.tabo{display:flex;align-items:center;gap:10px;margin-top:2px;font-size:12px;color:var(--muted)}
-.tabo svg{flex:0 0 auto;color:var(--line2)}
-.recete{margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--surface2);font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:12.5px;line-height:1.6;overflow-wrap:anywhere}
-.dugmeler{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px}
-.dugme{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font-size:13.5px;font-weight:600;box-shadow:var(--shadow);transition:border-color .15s,background .15s}
-.dugme:hover{border-color:var(--line2);background:var(--surface2)}
-.dugme.ana,.dugme.ana:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.dugme .ik{width:16px;height:16px}
-select{width:100%;height:42px;padding:0 36px 0 12px;border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:14.5px;-webkit-appearance:none;appearance:none;background:var(--surface2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238494a8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 12px center/16px no-repeat}
-select option{background:var(--surface);color:var(--text)}
-.not{margin:8px 2px 0;font-size:12.8px;line-height:1.5;color:var(--muted)}
-.ipucu{margin:0 2px 2px;font-size:12.8px;color:var(--muted)}
-.ipucu b{color:var(--text)}
-
-/* rapor */
-.rapor h4{margin:0 0 8px;font-size:15px;font-weight:700}
-.rapor p{margin:7px 0;font-size:13.8px;line-height:1.55}
+.kart-od .nokta{background:var(--od)} .kart-os .nokta{background:var(--os)}
+.tani{display:inline-block;margin:.1rem 0 .5rem;padding:2px 10px;border-radius:999px;font-size:.8rem;font-weight:600}
+.kart-od .tani{background:var(--od-bg);color:var(--od)} .kart-os .tani{background:var(--os-bg);color:var(--os)}
+.etk{font-size:.875rem;font-weight:600;line-height:1.2}
+.etk small{display:block;font-size:.72rem;font-weight:400;color:var(--bs-secondary-color);margin-top:2px}
+.aks-no{width:74px!important;flex:0 0 auto;text-align:center;font-weight:700;-moz-appearance:textfield;appearance:textfield}
+.aks-no::-webkit-inner-spin-button,.aks-no::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.tabo{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--bs-secondary-color)}
+.tabo svg{flex:0 0 auto;color:var(--bs-border-color)}
+.recete{margin-top:.5rem;padding:.35rem .6rem;border-radius:8px;background:var(--bs-body-bg);font-family:var(--bs-font-monospace);font-size:.8rem;color:var(--warn);overflow-wrap:anywhere}
+.rapor h4{font-size:1rem;font-weight:700;margin:0 0 .5rem}
+.rapor p{font-size:.875rem;margin:.4rem 0}
 .rapor .rozet{margin-right:4px}
-.rapor table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px}
-.rapor th,.rapor td{padding:8px 3px;border-bottom:1px solid var(--line);text-align:center}
-.rapor th{font-size:11.5px;font-weight:650;line-height:1.3;color:var(--muted)}
-.rapor td:first-child,.rapor th:first-child{text-align:left;font-weight:600}
-.rapor tr:last-child td{border-bottom:0}
+.rapor table{font-size:.82rem;margin:0}
+.rapor th{font-size:.72rem;font-weight:600;color:var(--bs-secondary-color);text-align:center}
+.rapor td{text-align:center}
+.rapor td:first-child,.rapor th:first-child{text-align:left}
+.accordion-button{font-weight:600;font-size:.92rem;padding:.75rem 1rem}
+.accordion-body{font-size:.875rem}
+.not{font-size:.8rem;color:var(--bs-secondary-color);margin:.5rem 0 0}
 
-/* bilgi */
-.bilgi .kart{padding:4px 14px}
-.bilgi details{border-top:1px solid var(--line)}
-.bilgi details:first-child{border-top:0}
-.bilgi summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 2px;list-style:none;cursor:pointer;font-size:14.5px;font-weight:650}
-.bilgi summary::-webkit-details-marker{display:none}
-.bilgi summary::after{content:"";width:16px;height:16px;flex:0 0 auto;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238494a8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/16px no-repeat;transition:transform .2s}
-.bilgi details[open] summary::after{transform:rotate(180deg)}
-.bilgi details>div{padding:0 2px 12px}
-.bilgi p,.bilgi li{margin:6px 0;font-size:13.8px;line-height:1.6}
-.bilgi ul{margin:4px 0;padding-left:18px}
-
-.alt-bilgi{max-width:1600px;margin:12px auto 0;padding:18px 16px calc(26px + env(safe-area-inset-bottom));border-top:1px solid var(--line);text-align:center;font-size:12.8px;color:var(--muted)}
-.alt-bilgi p{margin:4px 0}
-
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media (max-width:899px){
-  .blok,.rehber{scroll-margin-top:calc(var(--yapiskan,380px) + 10px)}
+/* ---------- telefon: görüntü üstte sabit ---------- */
+@media (max-width:767.98px){
+  .sol,.sahne-govde,.sahne-sutun{display:contents}
+  #sahneKap{position:sticky;top:0;z-index:20;flex:0 0 100%;max-width:100%;padding:8px 10px 8px}
+  #ozetKart{flex:0 0 100%;max-width:calc(100% - 20px);margin:4px 10px 0}
+  .sag{padding:12px 10px}
+  .hizli{gap:6px;margin-top:6px}
+  .hizli .btn{font-size:.82rem;padding:.35rem .3rem}
+  #detayBlok,.rehber,#ornekKart{scroll-margin-top:calc(var(--yapiskan,360px) + 8px)}
 }
-@media (max-width:560px){
-  .ust{padding:12px 12px 6px}
-  h1{font-size:17px}
-  .marka small{font-size:12px;white-space:normal}
-  .ikon-dug.metinli{width:40px;padding:0;justify-content:center}
-  .ikon-dug.metinli span{display:none}
-  .hizli{grid-template-columns:1fr;gap:6px;margin-top:8px}
-  .seg button{padding:7px 4px;font-size:13px}
-  .satir{grid-template-columns:96px minmax(0,1fr)}
+/* ---------- tablet / bilgisayar: uygulama düzeni (sayfa kaymaz, sağ panel kayar) ---------- */
+@media (min-width:768px) and (min-height:520px){
+  html,body{height:100%}
+  body{display:flex;flex-direction:column;overflow:hidden}
+  .app{flex:1 1 auto;min-height:0}
+  .app>.row{height:100%}
+  .sol{height:100%;display:flex;flex-direction:column;min-height:0}
+  .sahne-govde{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:10px}
+  .sahne-sutun{flex:0 1 auto;min-height:0;min-width:0;display:flex;flex-direction:column}
+  #sahneKap{flex:0 1 auto;min-height:0;display:flex;flex-direction:column}
+  .tuval-alan{flex:0 1 auto;min-height:0;width:100%;aspect-ratio:4/3;container-type:size;display:flex;align-items:flex-start;justify-content:center}
+  #tuval{width:min(100cqw,calc(100cqh * 4 / 3));flex:0 0 auto}
+  #ozetKart{flex:0 0 auto}
+  #ozet{height:clamp(84px,17vh,160px);overflow-y:auto}
+  .sag{height:100%;overflow-y:auto;border-left:1px solid var(--bs-border-color);background:color-mix(in srgb,var(--bs-tertiary-bg) 35%,var(--bs-body-bg))}
 }
-@media (min-width:900px){
-  .duzen{display:grid;grid-template-columns:minmax(0,1fr) minmax(380px,430px);gap:24px;align-items:start;padding:4px 20px 8px}
-  .sol{display:block;position:sticky;top:12px}
-  #sahneKap{position:static;padding:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-  #tuval,.hizli,#ozetKart{width:min(100%,calc((100vh - 350px) * 4 / 3));margin-left:auto;margin-right:auto}
-  #ozetKart{margin-top:12px;margin-bottom:0}
-  #ozet{max-height:130px;overflow:auto}
-  .sag{padding:0}
+/* büyük ekran: özet görüntünün yanında */
+@media (min-width:1200px) and (min-height:520px){
+  .sahne-govde{flex-direction:row}
+  .sahne-sutun{flex:1 1 auto}
+  #ozetKart{flex:0 0 300px;width:300px;display:flex;flex-direction:column;min-height:0}
+  #ozet{flex:1 1 auto;height:auto;min-height:0}
+  .sol,.sag{padding:16px}
+}
+@media (min-width:1600px) and (min-height:520px){
+  #ozetKart{flex-basis:340px;width:340px}
 }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
-  <symbol id="i-glasses" viewBox="0 0 24 24"><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M10 15a2 2 0 0 1 4 0"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/><path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/></symbol>
-  <symbol id="i-split" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></symbol>
-  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
-  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
-  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
-  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M6 4h12M7.5 9h9M9 14h6M10.5 19h3"/></symbol>
-  <symbol id="i-dial" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 5v14M5 12h14M7 7l10 10M17 7 7 17"/></symbol>
-  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></symbol>
-  <symbol id="i-city" viewBox="0 0 24 24"><path d="M3 21h18M6 21V9l5-3v15M18 21V12l-7-3"/><path d="M8.5 11v.01M8.5 14v.01M8.5 17v.01M14.5 14v.01M14.5 17v.01"/></symbol>
-  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></symbol>
-  <symbol id="i-camera" viewBox="0 0 24 24"><path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
-  <symbol id="i-mountain" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></symbol>
-  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
-  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
-  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/></symbol>
-  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
-  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
-  <symbol id="i-report" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h6"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
-  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
-</svg>
-
-<header class="ust">
-  <div class="marka">
-    <div class="logo"><svg class="ik"><use href="#i-eye"/></svg></div>
-    <div><h1>Göz Simülatörü</h1><small>Kırma kusurlarını gözlüklü ve gözlüksüz görün</small></div>
-  </div>
-  <div class="ust-dug">
-    <button class="ikon-dug metinli" id="yardimDug" title="Nasıl kullanılır?"><svg class="ik"><use href="#i-help"/></svg><span>Nasıl kullanılır?</span></button>
-    <button class="ikon-dug" id="temaDug" title="Açık / koyu görünüm" aria-label="Açık / koyu görünüm"><svg class="ik"><use href="#i-moon"/></svg></button>
-  </div>
-</header>
-
-<div class="duzen">
-<div class="sol">
-  <div id="sahneKap">
-    <div id="tuval">
-      <canvas id="gl"></canvas>
-      <div id="bolucu"></div>
-      <div class="etiket" id="etA"></div>
-      <div class="etiket gizli" id="etB"></div>
-      <div class="va" id="vaA"></div>
-      <div class="va gizli" id="vaB"></div>
-      <div id="glHata">Bu cihaz WebGL2 desteklemiyor; simülasyon çizilemiyor.</div>
-    </div>
-    <div class="hizli">
-      <div class="seg" id="gozSec" role="group" aria-label="Hangi göz">
-        <button data-v="R"><i class="d od"></i>Sağ göz</button><button data-v="L"><i class="d os"></i>Sol göz</button><button data-v="B"><i class="d iki"></i>İki göz</button>
-      </div>
-      <div class="seg" id="modSec" role="group" aria-label="Gözlük">
-        <button data-v="yok"><svg class="ik"><use href="#i-eye"/></svg>Gözlüksüz</button><button data-v="var"><svg class="ik"><use href="#i-glasses"/></svg>Gözlüklü</button><button data-v="kars"><svg class="ik"><use href="#i-split"/></svg>Karşılaştır</button>
-      </div>
+<nav class="navbar bg-body-tertiary border-bottom py-2">
+  <div class="container-fluid px-3">
+    <a class="navbar-brand d-flex align-items-center gap-2 me-2 py-0" href="./">
+      <span class="logo"><i class="bi bi-eye"></i></span>
+      <span class="lh-sm"><span class="fw-bold d-block">Göz Simülatörü</span><span class="marka-alt text-body-secondary d-none d-sm-block">Miyopi · Hipermetropi · Astigmatizma · Presbiyopi</span></span>
+    </a>
+    <div class="d-flex gap-2">
+      <button class="btn btn-sm btn-secim" id="yardimDug" title="Nasıl kullanılır?"><i class="bi bi-question-circle"></i><span class="d-none d-md-inline ms-1">Nasıl kullanılır?</span></button>
+      <button class="btn btn-sm btn-secim" id="temaDug" title="Açık / koyu görünüm" aria-label="Açık / koyu görünüm"><i class="bi bi-sun"></i></button>
     </div>
   </div>
-  <section class="kart" id="ozetKart">
-    <div class="kart-bas"><h2><svg class="ik"><use href="#i-eye"/></svg>Ne görüyor?</h2><span class="ozet-olcek" id="ozetMesafe"></span></div>
-    <div id="ozet"></div>
-    <p class="olcek-not">Sayılar tahmini görme keskinliğidir: <b>1,0</b> tam net · <b>0,5</b> yarı yarıya · <b>0,1</b> çok zayıf.</p>
-  </section>
-</div>
+</nav>
 
-<main class="sag">
-  <section class="kart rehber" id="rehber">
-    <div class="kart-bas"><h2><svg class="ik"><use href="#i-help"/></svg>Nasıl kullanılır?</h2><button class="ikon-dug kucuk" id="rehberKapat" aria-label="Kapat" title="Kapat"><svg class="ik"><use href="#i-x"/></svg></button></div>
-    <ol class="adimlar">
-      <li><b>Bir örnek seçin</b> (miyop, astigmat…) ya da kendi reçetenizi <b>Göz</b> sekmesine yazın.</li>
-      <li><b>Neye</b> ve <b>ne kadar uzağa</b> bakıldığını seçin.</li>
-      <li>Görüntünün altındaki <b>Gözlüklü</b> veya <b>Karşılaştır</b> düğmesine basın. Karşılaştırmada ortadaki çizgiyi sürükleyin.</li>
-    </ol>
-    <p class="not">Ekrana kendi gözlüğünüzle, rahat bir mesafeden bakın. Bu bir eğitim simülasyonudur, tanı koymaz.</p>
-    <div class="dugmeler" style="margin-bottom:0"><button class="dugme ana" id="rehberTamam"><svg class="ik"><use href="#i-check"/></svg>Anladım</button></div>
-  </section>
+<div class="container-fluid app p-0">
+<div class="row g-0">
 
-  <section class="blok" id="ornekBlok">
-    <h2 class="blok-bas"><span class="no">1</span>Bir örnek seçin</h2>
-    <div class="ornekler" id="ornekler"></div>
-    <div class="alt-dug">
-      <button class="metin-dug" id="dahaOrnek"><span>Daha fazla örnek</span><svg class="ik"><use href="#i-down"/></svg></button>
-      <button class="metin-dug" id="kendiDug"><svg class="ik"><use href="#i-pen"/></svg>Kendi reçetemi gireceğim</button>
-    </div>
-  </section>
-
-  <section class="blok">
-    <h2 class="blok-bas"><span class="no">2</span>Neye bakıyor?</h2>
-    <div class="secim uc" id="sahneSec">
-      <button data-v="esel"><svg class="ik"><use href="#i-chart"/></svg>Harf eşeli</button>
-      <button data-v="kadran"><svg class="ik"><use href="#i-dial"/></svg>Astigmat kadranı</button>
-      <button data-v="okuma"><svg class="ik"><use href="#i-book"/></svg>Okuma kartı</button>
-      <button data-v="sokak"><svg class="ik"><use href="#i-city"/></svg>Sokak</button>
-      <button data-v="foto"><svg class="ik"><use href="#i-image"/></svg>Fotoğraf yükle</button>
-      <button data-v="kamera"><svg class="ik"><use href="#i-camera"/></svg>Canlı kamera</button>
-    </div>
-    <input type="file" id="dosya" accept="image/*" class="gizli">
-  </section>
-
-  <section class="blok">
-    <h2 class="blok-bas"><span class="no">3</span>Ne kadar uzağa?</h2>
-    <div class="secim dort" id="mesafeSec">
-      <button data-v="6"><svg class="ik"><use href="#i-mountain"/></svg>Uzak<small>6 m</small></button>
-      <button data-v="1"><svg class="ik"><use href="#i-monitor"/></svg>Orta<small>1 m</small></button>
-      <button data-v="0.4"><svg class="ik"><use href="#i-book"/></svg>Yakın<small>40 cm</small></button>
-      <button data-v="0.25"><svg class="ik"><use href="#i-phone"/></svg>Çok yakın<small>25 cm</small></button>
-    </div>
-    <div class="mesafe"><svg class="ik"><use href="#i-ruler"/></svg><input type="range" id="mesafeKaydir" min="0" max="1000" step="1" aria-label="Bakılan mesafe"><output id="mesafeYaz"></output></div>
-  </section>
-
-  <section class="blok" id="detayBlok">
-    <h2 class="blok-bas"><span class="no">4</span>Ayrıntılar<small>değerler, gözlük, rapor</small></h2>
-    <nav class="sekmeler" id="sekmeler">
-      <button data-v="goz" class="on"><svg class="ik"><use href="#i-eye"/></svg>Göz</button>
-      <button data-v="gozluk"><svg class="ik"><use href="#i-glasses"/></svg>Gözlük</button>
-      <button data-v="aciklama"><svg class="ik"><use href="#i-report"/></svg>Rapor</button>
-      <button data-v="ayar"><svg class="ik"><use href="#i-sliders"/></svg>Ayarlar</button>
-      <button data-v="bilgi"><svg class="ik"><use href="#i-info"/></svg>Bilgi</button>
-    </nav>
-
-    <!-- GÖZ -->
-    <section class="sayfa on" id="s-goz">
-      <div class="kart">
-        <div class="satir" style="margin-top:0"><label>Yaş<small>yakına odaklanmayı etkiler</small></label><div class="adim" data-yol="age" data-min="5" data-max="90" data-adim="1" data-bicim="yas"></div></div>
-        <p class="not" id="uyumNot"></p>
-      </div>
-      <div class="kart od" id="kartEyeR"></div>
-      <div class="kart os" id="kartEyeL"></div>
-      <div class="dugmeler">
-        <button class="dugme" data-kopya="eye:R>L">Sağ → Sol kopyala</button>
-        <button class="dugme" data-kopya="eye:L>R">Sol → Sağ kopyala</button>
-        <button class="dugme" data-sifirla="eye"><svg class="ik"><use href="#i-reset"/></svg>İki gözü sıfırla</button>
-      </div>
-      <p class="not">Değerler reçetedeki gibi yazılır: <b>Sfer (S)</b>, <b>Silindir (C)</b> ve <b>Aks</b> (TABO, 0–180°). Eksi ya da artı silindir yazılabilir; hesap ikisini de doğru işler.</p>
-    </section>
-
-    <!-- GÖZLÜK -->
-    <section class="sayfa" id="s-gozluk">
-      <div class="kart">
-        <div class="satir" style="margin-top:0"><label>Lens türü</label>
-          <select id="lensTur"><option value="gozluk">Gözlük camı</option><option value="kontak">Kontak lens</option></select></div>
-        <div class="satir"><label>Kullanım</label>
-          <select id="lensKul">
-            <option value="uzak">Tek odaklı (uzak)</option>
-            <option value="okuma">Okuma gözlüğü (uzak + Add)</option>
-            <option value="progresif">Progresif / multifokal</option>
-          </select></div>
-        <div class="satir" id="addSatir"><label>Add<small>yakın ilavesi</small></label><div class="adim" data-yol="add" data-min="0" data-max="4" data-adim="0.25" data-bicim="d"></div></div>
-        <div class="satir" style="margin-bottom:0"><label>Verteks<small>cam ile göz arası</small></label><div class="adim" data-yol="vertex" data-min="0" data-max="20" data-adim="1" data-bicim="mm"></div></div>
-      </div>
-      <p class="ipucu"><b>Hızlı cam seçimi.</b> “Tam düzeltme” gözün değerlerini aynen cama yazar.</p>
-      <div class="dugmeler">
-        <button class="dugme ana" id="tamDuzelt"><svg class="ik"><use href="#i-check"/></svg>Tam düzeltme</button>
-        <button class="dugme" id="sferikEs">Sferik eşdeğer</button>
-        <button class="dugme" id="eksik">Eksik düzelt (−0,50)</button>
-        <button class="dugme" data-sifirla="lens"><svg class="ik"><use href="#i-reset"/></svg>Camları sıfırla</button>
-      </div>
-      <div class="kart od" id="kartLensR"></div>
-      <div class="kart os" id="kartLensL"></div>
-      <p class="not" id="lensNot"></p>
-    </section>
-
-    <!-- RAPOR -->
-    <section class="sayfa rapor-sayfa" id="s-aciklama"><div id="aciklama"></div></section>
-
-    <!-- AYARLAR -->
-    <section class="sayfa" id="s-ayar">
-      <div class="kart">
-        <div class="satir" style="margin-top:0"><label>Göz bebeği<small>pupil çapı</small></label><div class="adim" data-yol="pupil" data-min="2" data-max="8" data-adim="0.5" data-bicim="mm"></div></div>
-        <div class="dugmeler" style="margin-bottom:0">
-          <button class="dugme" data-pupil="2.5">Güneşli gün · 2,5 mm</button>
-          <button class="dugme" data-pupil="4">İç mekân · 4 mm</button>
-          <button class="dugme" data-pupil="6.5">Gece · 6,5 mm</button>
+  <!-- SOL: simülasyon -->
+  <div class="col-md-6 col-lg-7 col-xl-8 col-xxl-9 sol">
+    <div class="sahne-govde">
+      <div class="sahne-sutun">
+        <div id="sahneKap">
+          <div class="tuval-alan">
+            <div id="tuval">
+              <canvas id="gl"></canvas>
+              <div id="bolucu"></div>
+              <div class="etiket" id="etA"></div>
+              <div class="etiket gizli" id="etB"></div>
+              <div class="va" id="vaA"></div>
+              <div class="va gizli" id="vaB"></div>
+              <div id="glHata">Bu cihaz WebGL2 desteklemiyor; simülasyon çizilemiyor.</div>
+            </div>
+          </div>
+          <div class="hizli">
+            <div class="btn-group" id="gozSec" role="group" aria-label="Hangi göz">
+              <button type="button" class="btn btn-secim" data-v="R"><i class="d od"></i>Sağ göz</button>
+              <button type="button" class="btn btn-secim" data-v="L"><i class="d os"></i>Sol göz</button>
+              <button type="button" class="btn btn-secim" data-v="B"><i class="d iki"></i>İki göz</button>
+            </div>
+            <div class="btn-group" id="modSec" role="group" aria-label="Gözlük">
+              <button type="button" class="btn btn-secim" data-v="yok"><i class="bi bi-eye"></i>Gözlüksüz</button>
+              <button type="button" class="btn btn-secim" data-v="var"><i class="bi bi-eyeglasses"></i>Gözlüklü</button>
+              <button type="button" class="btn btn-secim" data-v="kars"><i class="bi bi-layout-split"></i>Karşılaştır</button>
+            </div>
+          </div>
         </div>
-        <p class="not">Göz bebeği büyüdükçe aynı derecedeki bulanıklık artar; bu yüzden gece görüşü daha kötüdür. Küçük göz bebeği “iğne deliği” gibi davranır.</p>
       </div>
-      <div class="kart">
-        <div class="satir" style="margin-top:0"><label>Görüş açısı<small>sokak / foto / kamera</small></label><div class="adim" data-yol="fovGecerli" data-min="5" data-max="90" data-adim="5" data-bicim="derece"></div></div>
-        <p class="not">Sokak, fotoğraf ve kamera sahnesinin ekrandaki genişliğinin gerçekte kaç dereceye karşılık geldiği. Küçük değer = sahne daha yakından/büyük görülüyor kabul edilir. Eşel, kadran ve okuma kartı açısal olarak kalibrelidir (1,0 satırı harf boyu 5 açı dakikası).</p>
+      <div class="card" id="ozetKart">
+        <div class="card-header d-flex align-items-center gap-2 py-2"><i class="bi bi-eye text-primary"></i><span class="fw-semibold">Ne görüyor?</span><span class="ms-auto small text-body-secondary" id="ozetMesafe"></span></div>
+        <div class="list-group list-group-flush" id="ozet"></div>
+        <div class="card-footer small text-body-secondary py-2">Sayılar tahmini görme keskinliğidir: <b>1,0</b> tam net · <b>0,5</b> yarı · <b>0,1</b> çok zayıf.</div>
       </div>
-      <div class="kart">
-        <div class="satir" style="margin-top:0"><label>Kalite</label>
-          <select id="kalite"><option value="96">Normal</option><option value="160">Yüksek</option><option value="48">Hızlı</option></select></div>
-        <p class="not">Yüksek kalite daha pürüzsüz bulanıklık verir; eski telefonlarda yavaş olabilir.</p>
-      </div>
-      <div class="dugmeler"><button class="dugme" id="hepsiSifir"><svg class="ik"><use href="#i-reset"/></svg>Tüm ayarları sıfırla</button></div>
-    </section>
+    </div>
+  </div>
 
-    <!-- BİLGİ -->
-    <section class="sayfa bilgi" id="s-bilgi">
-      <div class="kart">
-        <details open><summary>Bu simülatör ne yapar?</summary><div>
-          <p>İki göz için ayrı ayrı girilen kırma kusuru değerlerine (sfer, silindir, aks) göre kişinin dünyayı nasıl gördüğünü fiziksel optik hesapla canlandırır. Ardından gözlük ya da kontak lens değerleri girilerek düzeltilmiş görüş gösterilir. Tek göz ve iki göz görüşü, farklı bakış mesafeleri, yaşa bağlı uyum gücü ve göz bebeği çapı hesaba katılır.</p>
-        </div></details>
-        <details><summary>Miyopi · uzağı bulanık görme</summary><div>
-          <p>Gözün kırıcılığı eksen uzunluğuna göre fazladır; uzaktan gelen ışık retinanın önünde odaklanır. Uzak bulanık, yakın nettir. Uzak nokta = 100 / |derece| cm (örn. −2,00 D → 50 cm). Eksi (ıraksak) camla düzeltilir; gözlük camı görüntüyü küçültür.</p>
-        </div></details>
-        <details><summary>Hipermetropi · yakını zor görme</summary><div>
-          <p>Işık retinanın arkasında odaklanır. Genç kişiler uyum (akomodasyon) yaparak bunu kapatabilir; bu yüzden uzağı net görüp çabuk yorulabilirler. Uyum gücü yaşla azaldığından önce yakın, ileri yaşta uzak da bulanıklaşır. Artı (yakınsak) camla düzeltilir; cam görüntüyü büyütür.</p>
-        </div></details>
-        <details><summary>Astigmatizma · yöne göre bulanıklık</summary><div>
-          <p>Kornea/lens her yönde aynı eğrilikte değildir; iki ana meridyen farklı kırar. Bir yöndeki çizgiler net, ona dik çizgiler bulanık görülür; noktalar uzamış (elips) görünür. Silindirik camla düzeltilir. Eksi silindir aksı 180° civarı “kurala uygun”, 90° civarı “kurala aykırı”, diğerleri “oblik” astigmattır.</p>
-        </div></details>
-        <details><summary>Presbiyopi · yaşa bağlı yakın görme kaybı</summary><div>
-          <p>Yaşla göz merceğinin esnekliği azalır, uyum gücü düşer (Hofstetter ortalaması: 18,5 − 0,3 × yaş D). 40’lı yaşlardan sonra yakın görme zorlaşır; okuma ilavesi (Add) gerekir.</p>
-        </div></details>
-        <details><summary>Reçete nasıl okunur? (S, C, Aks, TABO)</summary><div>
-          <p><b>S</b> sfer, <b>C</b> silindir, <b>Aks</b> silindirin eksenidir (0–180°). Aks TABO sistemine göre, hastaya karşıdan bakan kişinin gözünden saat yönünün tersine ölçülür. Örnek: −1,00 −0,75 × 180. Transpozisyon: S’ = S + C, C’ = −C, Aks’ = Aks ± 90°. Sferik eşdeğer: SE = S + C/2.</p>
-        </div></details>
-        <details><summary>Hesap yöntemi (uzmanlar için)</summary><div>
-          <ul>
-            <li><b>Güç vektörleri (Thibos):</b> M = S + C/2, J0 = −(C/2)·cos2α, J45 = −(C/2)·sin2α. Göz ile cam vektörel olarak çıkarılır; kalan (rezidüel) kusur bulunur. Böylece eğik akslı, yanlış akslı veya eksik camlar doğru hesaplanır.</li>
-            <li><b>Mesafe ve uyum:</b> Bakılan cismin vergensi 1/d eklenir; göz, uyum gücü kadar (0 … Amax) artı güç ekleyerek en az bulanıklık konumuna odaklanır.</li>
-            <li><b>Bulanıklık:</b> Geometrik optik ile bulanıklık açısı ≈ pupil çapı × defokus (mm × D = mrad). Her ana meridyende ayrı hesaplanır; nokta yayılımı bir elips olur ve görüntü bu elipsle evrişime (konvolüsyon) sokulur.</li>
-            <li><b>Görme keskinliği tahmini:</b> MAR ≈ √(1 + (0,57 · pupil · B)²), B = √(M² + J0² + J45²) bulanıklık şiddeti. Ondalık VA = 1 / MAR (en fazla 1,0).</li>
-            <li><b>Gözlük büyütmesi:</b> SM ≈ 1 / (1 − h·F), h = verteks + 3 mm. Silindirli camda iki meridyende farklı büyütme olur (şekil bozulması). Kontak lenste büyütme ihmal edilebilir.</li>
-            <li><b>Verteks dönüşümü:</b> F<sub>kontak</sub> = F<sub>gözlük</sub> / (1 − d·F<sub>gözlük</sub>).</li>
-            <li><b>İki göz:</b> Beyin daha net görüntüyü ağır basacak şekilde birleştirir (bulanıklık bastırması). Simülasyonda her göz görüntüsü 1/(bulanıklık²+1) ağırlığıyla karıştırılır. İki göz farkı (anizometropi) ve görüntü boyu farkı (aniseikoni) ayrıca raporlanır.</li>
-          </ul>
-        </div></details>
-        <details><summary>Sınırlamalar</summary><div>
-          <p>Bu bir eğitim simülasyonudur, tanı aracı değildir. Yüksek dereceli sapmalar (küresel sapma, koma), kırınım, renk sapması, katarakt/keratokonus gibi hastalıklar ve beynin bulanıklığa uyumu modellenmemiştir. Görme keskinliği değerleri yaklaşık tahmindir; ekranın çözünürlüğü ve izleyenin kendi görmesi sonucu etkiler (kendi gözlüğünüzle bakın).</p>
-        </div></details>
-        <details><summary>Eğitimde kullanım</summary><div>
-          <p>Optisyenlik öğrencilerine ve hastalara “reçete → görüş” ilişkisini öğretmede kullanılabilir. Örneğin ön test / son test ile kavram öğrenimi ölçülebilir; tam düzeltme, eksik düzeltme, yanlış aks ve sferik eşdeğer gibi uygulamalar görsel olarak karşılaştırılabilir.</p>
-        </div></details>
+  <!-- SAĞ: ayarlar -->
+  <div class="col-md-6 col-lg-5 col-xl-4 col-xxl-3 sag">
+
+    <div class="alert rehber alert-dismissible mb-3" id="rehber">
+      <div class="fw-semibold"><i class="bi bi-question-circle me-1"></i>Nasıl kullanılır?</div>
+      <ol class="small">
+        <li><b>Bir örnek seçin</b> (miyop, astigmat…) ya da kendi reçetenizi <b>Göz</b> sekmesine yazın.</li>
+        <li><b>Neye</b> ve <b>ne kadar uzağa</b> bakıldığını seçin.</li>
+        <li>Görüntünün altındaki <b>Gözlüklü</b> ya da <b>Karşılaştır</b> düğmesine basın. Karşılaştırmada ortadaki çizgiyi sürükleyin.</li>
+      </ol>
+      <div class="small text-body-secondary">Ekrana kendi gözlüğünüzle bakın. Bu bir eğitim simülasyonudur, tanı koymaz.</div>
+      <button type="button" class="btn-close" id="rehberKapat" aria-label="Kapat"></button>
+    </div>
+
+    <div class="card mb-3" id="ornekKart">
+      <div class="card-body">
+        <div class="kart-baslik"><span class="adim-no">1</span>Göz durumu</div>
+        <select class="form-select" id="ornek" aria-label="Hazır örnek"></select>
+        <div class="form-text mt-2" id="ornekAc"></div>
+        <button class="btn btn-link btn-sm px-0 mt-1" id="kendiDug"><i class="bi bi-pencil me-1"></i>Kendi reçetemi gireceğim</button>
       </div>
-    </section>
-  </section>
-</main>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="kart-baslik"><span class="adim-no">2</span>Neye bakıyor?</div>
+        <div class="secim uc" id="sahneSec">
+          <button type="button" class="btn btn-secim" data-v="esel"><i class="bi bi-type"></i>Harf eşeli</button>
+          <button type="button" class="btn btn-secim" data-v="kadran"><i class="bi bi-asterisk"></i>Astigmat kadranı</button>
+          <button type="button" class="btn btn-secim" data-v="okuma"><i class="bi bi-book"></i>Okuma kartı</button>
+          <button type="button" class="btn btn-secim" data-v="sokak"><i class="bi bi-buildings"></i>Sokak</button>
+          <button type="button" class="btn btn-secim" data-v="foto"><i class="bi bi-image"></i>Fotoğraf</button>
+          <button type="button" class="btn btn-secim" data-v="kamera"><i class="bi bi-camera-video"></i>Canlı kamera</button>
+        </div>
+        <input type="file" id="dosya" accept="image/*" class="gizli">
+        <div class="kart-baslik mt-3"><span class="adim-no">3</span>Ne kadar uzağa?</div>
+        <div class="secim dort" id="mesafeSec">
+          <button type="button" class="btn btn-secim" data-v="6"><i class="bi bi-image-alt"></i>Uzak<small>6 m</small></button>
+          <button type="button" class="btn btn-secim" data-v="1"><i class="bi bi-display"></i>Orta<small>1 m</small></button>
+          <button type="button" class="btn btn-secim" data-v="0.4"><i class="bi bi-book"></i>Yakın<small>40 cm</small></button>
+          <button type="button" class="btn btn-secim" data-v="0.25"><i class="bi bi-phone"></i>Çok yakın<small>25 cm</small></button>
+        </div>
+        <div class="d-flex align-items-center gap-3 mt-2">
+          <i class="bi bi-rulers text-body-secondary"></i>
+          <input type="range" class="form-range" id="mesafeKaydir" min="0" max="1000" step="1" aria-label="Bakılan mesafe">
+          <output id="mesafeYaz" class="fw-bold text-end" style="min-width:56px"></output>
+        </div>
+      </div>
+    </div>
+
+    <div id="detayBlok">
+      <div class="kart-baslik"><span class="adim-no">4</span>Ayrıntılar</div>
+      <nav class="nav nav-pills nav-fill sekmeler bg-body-tertiary border rounded-3 p-1 mb-3" id="sekmeler">
+        <button class="nav-link active" data-v="goz"><i class="bi bi-eye"></i>Göz</button>
+        <button class="nav-link" data-v="gozluk"><i class="bi bi-eyeglasses"></i>Gözlük</button>
+        <button class="nav-link" data-v="aciklama"><i class="bi bi-clipboard2-pulse"></i>Rapor</button>
+        <button class="nav-link" data-v="ayar"><i class="bi bi-sliders"></i>Ayarlar</button>
+        <button class="nav-link" data-v="bilgi"><i class="bi bi-info-circle"></i>Bilgi</button>
+      </nav>
+
+      <!-- GÖZ -->
+      <section class="sayfa on" id="s-goz">
+        <div class="card mb-3"><div class="card-body">
+          <div class="row g-2 align-items-center"><label class="col-4 etk">Yaş<small>yakına odaklanmayı etkiler</small></label><div class="col-8"><div class="adim" data-yol="age" data-min="5" data-max="90" data-adim="1" data-bicim="yas"></div></div></div>
+          <p class="not" id="uyumNot"></p>
+        </div></div>
+        <div class="card mb-3 kart-od" id="kartEyeR"></div>
+        <div class="card mb-3 kart-os" id="kartEyeL"></div>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-sm btn-secim" data-kopya="eye:R>L">Sağ → Sol kopyala</button>
+          <button class="btn btn-sm btn-secim" data-kopya="eye:L>R">Sol → Sağ kopyala</button>
+          <button class="btn btn-sm btn-secim" data-sifirla="eye"><i class="bi bi-arrow-counterclockwise me-1"></i>İki gözü sıfırla</button>
+        </div>
+        <p class="not">Değerler reçetedeki gibi yazılır: Sfer (S), Silindir (C) ve Aks (TABO, 0–180°). Eksi ya da artı silindir yazılabilir; hesap ikisini de doğru işler.</p>
+      </section>
+
+      <!-- GÖZLÜK -->
+      <section class="sayfa" id="s-gozluk">
+        <div class="card mb-3"><div class="card-body">
+          <div class="row g-2 align-items-center mb-2"><label class="col-4 etk" for="lensTur">Lens türü</label><div class="col-8">
+            <select class="form-select" id="lensTur"><option value="gozluk">Gözlük camı</option><option value="kontak">Kontak lens</option></select></div></div>
+          <div class="row g-2 align-items-center mb-2"><label class="col-4 etk" for="lensKul">Kullanım</label><div class="col-8">
+            <select class="form-select" id="lensKul">
+              <option value="uzak">Tek odaklı (uzak)</option>
+              <option value="okuma">Okuma gözlüğü (uzak + Add)</option>
+              <option value="progresif">Progresif / multifokal</option>
+            </select></div></div>
+          <div class="row g-2 align-items-center mb-2" id="addSatir"><label class="col-4 etk">Add<small>yakın ilavesi</small></label><div class="col-8"><div class="adim" data-yol="add" data-min="0" data-max="4" data-adim="0.25" data-bicim="d"></div></div></div>
+          <div class="row g-2 align-items-center"><label class="col-4 etk">Verteks<small>cam ile göz arası</small></label><div class="col-8"><div class="adim" data-yol="vertex" data-min="0" data-max="20" data-adim="1" data-bicim="mm"></div></div></div>
+        </div></div>
+        <div class="small text-body-secondary mb-2"><b class="text-body">Hızlı cam seçimi:</b> “Tam düzeltme” gözün değerlerini aynen cama yazar.</div>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <button class="btn btn-sm btn-primary" id="tamDuzelt"><i class="bi bi-check2 me-1"></i>Tam düzeltme</button>
+          <button class="btn btn-sm btn-secim" id="sferikEs">Sferik eşdeğer</button>
+          <button class="btn btn-sm btn-secim" id="eksik">Eksik düzelt (−0,50)</button>
+          <button class="btn btn-sm btn-secim" data-sifirla="lens"><i class="bi bi-arrow-counterclockwise me-1"></i>Camları sıfırla</button>
+        </div>
+        <div class="card mb-3 kart-od" id="kartLensR"></div>
+        <div class="card mb-3 kart-os" id="kartLensL"></div>
+        <p class="not" id="lensNot"></p>
+      </section>
+
+      <!-- RAPOR -->
+      <section class="sayfa" id="s-aciklama"><div id="aciklama"></div></section>
+
+      <!-- AYARLAR -->
+      <section class="sayfa" id="s-ayar">
+        <div class="card mb-3"><div class="card-body">
+          <div class="row g-2 align-items-center"><label class="col-4 etk">Göz bebeği<small>pupil çapı</small></label><div class="col-8"><div class="adim" data-yol="pupil" data-min="2" data-max="8" data-adim="0.5" data-bicim="mm"></div></div></div>
+          <div class="d-flex flex-wrap gap-2 mt-2">
+            <button class="btn btn-sm btn-secim" data-pupil="2.5">Güneşli gün 2,5 mm</button>
+            <button class="btn btn-sm btn-secim" data-pupil="4">İç mekân 4 mm</button>
+            <button class="btn btn-sm btn-secim" data-pupil="6.5">Gece 6,5 mm</button>
+          </div>
+          <p class="not">Göz bebeği büyüdükçe aynı derecedeki bulanıklık artar; bu yüzden gece görüşü daha kötüdür. Küçük göz bebeği “iğne deliği” gibi davranır.</p>
+        </div></div>
+        <div class="card mb-3"><div class="card-body">
+          <div class="row g-2 align-items-center"><label class="col-4 etk">Görüş açısı<small>sokak / foto / kamera</small></label><div class="col-8"><div class="adim" data-yol="fovGecerli" data-min="5" data-max="90" data-adim="5" data-bicim="derece"></div></div></div>
+          <p class="not">Sokak, fotoğraf ve kamera sahnesinin ekrandaki genişliğinin gerçekte kaç dereceye karşılık geldiği. Küçük değer = sahne daha yakından/büyük görülüyor kabul edilir. Eşel, kadran ve okuma kartı açısal olarak kalibrelidir (1,0 satırı harf boyu 5 açı dakikası).</p>
+        </div></div>
+        <div class="card mb-3"><div class="card-body">
+          <div class="row g-2 align-items-center"><label class="col-4 etk" for="kalite">Kalite</label><div class="col-8">
+            <select class="form-select" id="kalite"><option value="96">Normal</option><option value="160">Yüksek</option><option value="48">Hızlı</option></select></div></div>
+          <p class="not">Yüksek kalite daha pürüzsüz bulanıklık verir; eski telefonlarda yavaş olabilir.</p>
+        </div></div>
+        <button class="btn btn-sm btn-secim" id="hepsiSifir"><i class="bi bi-arrow-counterclockwise me-1"></i>Tüm ayarları sıfırla</button>
+      </section>
+
+      <!-- BİLGİ -->
+      <section class="sayfa" id="s-bilgi">
+        <div class="accordion" id="bilgiAk">
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#b1">Bu simülatör ne yapar?</button></h3>
+            <div id="b1" class="accordion-collapse collapse show" data-bs-parent="#bilgiAk"><div class="accordion-body">İki göz için ayrı ayrı girilen kırma kusuru değerlerine (sfer, silindir, aks) göre kişinin dünyayı nasıl gördüğünü fiziksel optik hesapla canlandırır. Ardından gözlük ya da kontak lens değerleri girilerek düzeltilmiş görüş gösterilir. Tek göz ve iki göz görüşü, farklı bakış mesafeleri, yaşa bağlı uyum gücü ve göz bebeği çapı hesaba katılır.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b2">Miyopi · uzağı bulanık görme</button></h3>
+            <div id="b2" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body">Gözün kırıcılığı eksen uzunluğuna göre fazladır; uzaktan gelen ışık retinanın önünde odaklanır. Uzak bulanık, yakın nettir. Uzak nokta = 100 / |derece| cm (örn. −2,00 D → 50 cm). Eksi (ıraksak) camla düzeltilir; gözlük camı görüntüyü küçültür.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b3">Hipermetropi · yakını zor görme</button></h3>
+            <div id="b3" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body">Işık retinanın arkasında odaklanır. Genç kişiler uyum (akomodasyon) yaparak bunu kapatabilir; bu yüzden uzağı net görüp çabuk yorulabilirler. Uyum gücü yaşla azaldığından önce yakın, ileri yaşta uzak da bulanıklaşır. Artı (yakınsak) camla düzeltilir; cam görüntüyü büyütür.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b4">Astigmatizma · yöne göre bulanıklık</button></h3>
+            <div id="b4" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body">Kornea/lens her yönde aynı eğrilikte değildir; iki ana meridyen farklı kırar. Bir yöndeki çizgiler net, ona dik çizgiler bulanık görülür; noktalar uzamış (elips) görünür. Silindirik camla düzeltilir. Eksi silindir aksı 180° civarı “kurala uygun”, 90° civarı “kurala aykırı”, diğerleri “oblik” astigmattır.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b5">Presbiyopi · yaşa bağlı yakın görme kaybı</button></h3>
+            <div id="b5" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body">Yaşla göz merceğinin esnekliği azalır, uyum gücü düşer (Hofstetter ortalaması: 18,5 − 0,3 × yaş D). 40’lı yaşlardan sonra yakın görme zorlaşır; okuma ilavesi (Add) gerekir.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b6">Reçete nasıl okunur? (S, C, Aks, TABO)</button></h3>
+            <div id="b6" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body"><b>S</b> sfer, <b>C</b> silindir, <b>Aks</b> silindirin eksenidir (0–180°). Aks TABO sistemine göre, hastaya karşıdan bakan kişinin gözünden saat yönünün tersine ölçülür. Örnek: −1,00 −0,75 × 180. Transpozisyon: S’ = S + C, C’ = −C, Aks’ = Aks ± 90°. Sferik eşdeğer: SE = S + C/2.</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b7">Hesap yöntemi (uzmanlar için)</button></h3>
+            <div id="b7" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body"><ul class="ps-3 mb-0">
+              <li><b>Güç vektörleri (Thibos):</b> M = S + C/2, J0 = −(C/2)·cos2α, J45 = −(C/2)·sin2α. Göz ile cam vektörel olarak çıkarılır; kalan (rezidüel) kusur bulunur. Böylece eğik akslı, yanlış akslı veya eksik camlar doğru hesaplanır.</li>
+              <li><b>Mesafe ve uyum:</b> Bakılan cismin vergensi 1/d eklenir; göz, uyum gücü kadar (0 … Amax) artı güç ekleyerek en az bulanıklık konumuna odaklanır.</li>
+              <li><b>Bulanıklık:</b> Geometrik optik ile bulanıklık açısı ≈ pupil çapı × defokus (mm × D = mrad). Her ana meridyende ayrı hesaplanır; nokta yayılımı bir elips olur ve görüntü bu elipsle evrişime (konvolüsyon) sokulur.</li>
+              <li><b>Görme keskinliği tahmini:</b> MAR ≈ √(1 + (0,57 · pupil · B)²), B = √(M² + J0² + J45²) bulanıklık şiddeti. Ondalık VA = 1 / MAR (en fazla 1,0).</li>
+              <li><b>Gözlük büyütmesi:</b> SM ≈ 1 / (1 − h·F), h = verteks + 3 mm. Silindirli camda iki meridyende farklı büyütme olur (şekil bozulması). Kontak lenste büyütme ihmal edilebilir.</li>
+              <li><b>Verteks dönüşümü:</b> F<sub>kontak</sub> = F<sub>gözlük</sub> / (1 − d·F<sub>gözlük</sub>).</li>
+              <li><b>İki göz:</b> Beyin daha net görüntüyü ağır basacak şekilde birleştirir (bulanıklık bastırması). Simülasyonda her göz görüntüsü 1/(bulanıklık²+1) ağırlığıyla karıştırılır. İki göz farkı (anizometropi) ve görüntü boyu farkı (aniseikoni) ayrıca raporlanır.</li>
+            </ul></div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b8">Sınırlamalar</button></h3>
+            <div id="b8" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body">Bu bir eğitim simülasyonudur, tanı aracı değildir. Yüksek dereceli sapmalar (küresel sapma, koma), kırınım, renk sapması, katarakt/keratokonus gibi hastalıklar ve beynin bulanıklığa uyumu modellenmemiştir. Görme keskinliği değerleri yaklaşık tahmindir; ekranın çözünürlüğü ve izleyenin kendi görmesi sonucu etkiler (kendi gözlüğünüzle bakın).</div></div></div>
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b9">Eğitimde kullanım</button></h3>
+            <div id="b9" class="accordion-collapse collapse" data-bs-parent="#bilgiAk"><div class="accordion-body">Optisyenlik öğrencilerine ve hastalara “reçete → görüş” ilişkisini öğretmede kullanılabilir. Örneğin ön test / son test ile kavram öğrenimi ölçülebilir; tam düzeltme, eksik düzeltme, yanlış aks ve sferik eşdeğer gibi uygulamalar görsel olarak karşılaştırılabilir.</div></div></div>
+        </div>
+      </section>
+    </div>
+
+    <p class="text-center small text-body-secondary mt-4 mb-1"><b>Eğitim amaçlıdır.</b> Bu simülasyon tanı koymaz; görme şikâyetiniz varsa göz hekimine başvurun.</p>
+  </div>
+</div>
 </div>
 
-<footer class="alt-bilgi">
-  <p><b>Eğitim amaçlıdır.</b> Bu simülasyon tanı koymaz; görme şikâyetiniz varsa göz hekimine başvurun.</p>
-  <p>Hesaplar fiziksel optiğe (Thibos güç vektörleri, geometrik bulanıklık) dayanır.</p>
-</footer>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 "use strict";
 /* ========================= yardımcılar ========================= */
@@ -1069,7 +964,8 @@ function sayiOku(s) { const v = parseFloat(String(s).replace(/[−–]/g, "-").r
 
 function adimKur(el) {
   const y = el.dataset.yol, mn = +el.dataset.min, mx = +el.dataset.max, ad = +el.dataset.adim, b = el.dataset.bicim;
-  el.innerHTML = '<button type="button">−</button><input inputmode="decimal"><button type="button">+</button>';
+  el.classList.add("input-group");
+  el.innerHTML = '<button type="button" class="btn btn-secim" aria-label="Azalt">−</button><input class="form-control" inputmode="decimal"><button type="button" class="btn btn-secim" aria-label="Artır">+</button>';
   const [eks, inp, art] = el.children;
   const al = () => (y === "fovGecerli" ? S.fov[fovAnahtar()] : yolAl(y));
   const yaz = v => { v = clamp(Math.round(v / ad) * ad, mn, mx); if (y === "fovGecerli") S.fov[fovAnahtar()] = v; else yolYaz(y, v); guncelle(true); };
@@ -1098,37 +994,39 @@ function taboSvg(a, renk) {
 function rxKart(el, grup, k) {
   const cam = grup === "lens";
   const ad = (k === "R" ? "Sağ " : "Sol ") + (cam ? "cam" : "göz");
-  el.innerHTML = `<h3><span class="nokta"></span>${ad} <small>${k === "R" ? "OD" : "OS"}</small></h3>
+  const satir = (lbl, alt, ic) => `<div class="row g-2 align-items-center mb-2"><label class="col-4 etk">${lbl}<small>${alt}</small></label><div class="col-8">${ic}</div></div>`;
+  el.innerHTML = `<div class="card-body">
+  <div class="kart-baslik mb-1"><span class="nokta"></span>${ad} <small class="text-body-secondary fw-normal">${k === "R" ? "OD" : "OS"}</small></div>
   ${cam ? "" : `<div class="tani" data-tani="${k}"></div>`}
-  <div class="satir"><label>Sfer (S)<small>${cam ? "camın küresel gücü" : "− miyop · + hipermetrop"}</small></label><div class="adim" data-yol="${grup}.${k}.s" data-min="-20" data-max="20" data-adim="0.25"></div></div>
-  <div class="satir"><label>Silindir (C)<small>${cam ? "astigmat düzeltmesi" : "astigmat miktarı"}</small></label><div class="adim" data-yol="${grup}.${k}.c" data-min="-8" data-max="8" data-adim="0.25"></div></div>
-  <div class="satir"><label>Aks<small>${cam ? "silindirin yönü" : "astigmatın yönü"}</small></label><div class="aksSatir"><input type="range" min="1" max="180" step="1" data-aks="${grup}.${k}.a" aria-label="Aks"><input type="number" min="0" max="180" data-aksn="${grup}.${k}.a" aria-label="Aks (derece)"></div></div>
+  ${satir("Sfer (S)", cam ? "camın küresel gücü" : "− miyop · + hipermetrop", `<div class="adim" data-yol="${grup}.${k}.s" data-min="-20" data-max="20" data-adim="0.25"></div>`)}
+  ${satir("Silindir (C)", cam ? "astigmat düzeltmesi" : "astigmat miktarı", `<div class="adim" data-yol="${grup}.${k}.c" data-min="-8" data-max="8" data-adim="0.25"></div>`)}
+  ${satir("Aks", cam ? "silindirin yönü" : "astigmatın yönü", `<div class="d-flex align-items-center gap-2"><input type="range" class="form-range" min="1" max="180" step="1" data-aks="${grup}.${k}.a" aria-label="Aks"><input type="number" class="form-control aks-no" min="0" max="180" data-aksn="${grup}.${k}.a" aria-label="Aks (derece)"></div>`)}
   <div class="tabo" data-tabo="${grup}.${k}"></div>
-  <div class="recete" data-recete="${grup}.${k}"></div>`;
+  <div class="recete" data-recete="${grup}.${k}"></div></div>`;
 }
 for (const g of ["eye", "lens"]) for (const k of ["R", "L"]) rxKart($("#kart" + (g === "eye" ? "Eye" : "Lens") + k), g, k);
 $$(".adim").forEach(adimKur);
 $$("[data-aks]").forEach(el => el.addEventListener("input", () => { yolYaz(el.dataset.aks, +el.value); guncelle(true); }));
 $$("[data-aksn]").forEach(el => el.addEventListener("change", () => { const v = sayiOku(el.value); if (v !== null) { yolYaz(el.dataset.aksn, aksNorm(clamp(v, 0, 180))); guncelle(); } }));
 
-const ornekKap = $("#ornekler");
-ornekKap.innerHTML = ORNEKLER.map(o => `<button class="ornek${o.ek ? " ek" : ""}" data-id="${o.id}"><span class="tur"><i style="background:${TURLER[o.tur][1]}"></i>${TURLER[o.tur][0]}</span><b>${o.ad}</b><em>${o.ac}</em></button>`).join("");
-ornekKap.addEventListener("click", e => {
-  const b = e.target.closest(".ornek"); if (!b) return;
-  const o = ORNEKLER.find(x => x.id === b.dataset.id); if (!o) return;
+const ornekSel = $("#ornek");
+ornekSel.innerHTML = `<option value="">— Hazır örnek seçin —</option>` + Object.keys(TURLER).map(t =>
+  `<optgroup label="${TURLER[t][0]}">` + ORNEKLER.filter(o => o.tur === t).map(o => `<option value="${o.id}">${o.ad}</option>`).join("") + `</optgroup>`).join("");
+ornekSel.addEventListener("change", () => {
+  const o = ORNEKLER.find(x => x.id === ornekSel.value);
+  if (!o) { arayuz(); return; }
   for (const k of ["R", "L"]) { const [s, c, a] = o.rx[k]; S.eye[k] = { s, c, a }; S.lens[k] = { s, c, a }; }
   S.age = o.yas;
   S.add = clamp(yuvarla025(o.yas < 40 ? 0 : (o.yas - 40) / 20 * 2 + 0.75), 0, 3);
   S.lensKul = o.yas >= 45 ? "progresif" : "uzak";
   S.gozluk = false;
+  ornekSel.blur();
   guncelle();
 });
-function ornekAcik(a) {
-  ornekKap.classList.toggle("acik", a);
-  $("#dahaOrnek").classList.toggle("acik", a);
-  $("#dahaOrnek span").textContent = a ? "Daha az göster" : "Daha fazla örnek";
+function aktifOrnek() {
+  const esit = (r, v) => Math.abs(r.s - v[0]) < 0.01 && Math.abs(r.c - v[1]) < 0.01 && (Math.abs(v[1]) < 0.01 || aksNorm(r.a) === aksNorm(v[2]));
+  return ORNEKLER.find(o => S.age === o.yas && esit(S.eye.R, o.rx.R) && esit(S.eye.L, o.rx.L));
 }
-$("#dahaOrnek").addEventListener("click", () => ornekAcik(!ornekKap.classList.contains("acik")));
 $("#kendiDug").addEventListener("click", () => { S.sekme = "goz"; arayuz(); kaydet(); $("#detayBlok").scrollIntoView({ behavior: "smooth", block: "start" }); });
 
 $("#gozSec").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { S.goz = b.dataset.v; guncelle(); } });
@@ -1258,14 +1156,14 @@ function gozMetni(k) {
 
 function tabloMetni() {
   const mes = [[6, "6 m"], [1, "1 m"], [0.4, "40 cm"]];
-  let h = `<h4>Mesafeye göre tahmini görme keskinliği</h4><table><tr><th>Mesafe</th><th>Sağ<br>gözlüksüz</th><th>Sağ<br>gözlükle</th><th>Sol<br>gözlüksüz</th><th>Sol<br>gözlükle</th><th>İki göz<br>gözlükle</th></tr>`;
+  let h = `<h4>Mesafeye göre tahmini görme keskinliği</h4><div class="table-responsive"><table class="table table-sm align-middle"><tr><th>Mesafe</th><th>Sağ<br>gözlüksüz</th><th>Sağ<br>gözlükle</th><th>Sol<br>gözlüksüz</th><th>Sol<br>gözlükle</th><th>İki göz<br>gözlükle</th></tr>`;
   for (const [d, ad] of mes) {
     const a = durum("R", false, d), b = durum("R", true, d), c = durum("L", false, d), e = durum("L", true, d);
     const hc = x => `<td><span class="rozet ${vaSinif(x.va)[1]}">${vaYaz(x.va)}</span></td>`;
     const bi = binokulerVA(b, e);
     h += `<tr><td>${ad}</td>${hc(a)}${hc(b)}${hc(c)}${hc(e)}<td><span class="rozet ${vaSinif(bi)[1]}">${vaYaz(bi)}</span></td></tr>`;
   }
-  return h + `</table><p class="not">Ondalık görme keskinliği (1,0 = tam). Pupil ${fmtN(S.pupil, 1)} mm, yaş ${S.age}.</p>`;
+  return h + `</table></div><p class="not">Ondalık görme keskinliği (1,0 = tam). Pupil ${fmtN(S.pupil, 1)} mm, yaş ${S.age}.</p>`;
 }
 
 function iki_gozMetni() {
@@ -1284,15 +1182,16 @@ function iki_gozMetni() {
 
 /* ========================= güncelleme ========================= */
 function arayuz() {
-  const bas = (sec, f) => $$(sec).forEach(b => { const on = f(b); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+  const bas = (sec, f) => $$(sec).forEach(b => { const on = f(b); b.classList.toggle("active", on); b.setAttribute("aria-pressed", on); });
   bas("#gozSec button", b => b.dataset.v === S.goz);
   bas("#sahneSec button", b => b.dataset.v === S.sahne);
   bas("#mesafeSec button", b => Math.abs(+b.dataset.v - S.d) < 0.001);
   bas("#sekmeler button", b => b.dataset.v === S.sekme);
   const mod = S.kars ? "kars" : S.gozluk ? "var" : "yok";
   bas("#modSec button", b => b.dataset.v === mod);
-  const esit = (r, v) => Math.abs(r.s - v[0]) < 0.01 && Math.abs(r.c - v[1]) < 0.01 && (Math.abs(v[1]) < 0.01 || aksNorm(r.a) === aksNorm(v[2]));
-  bas(".ornek", b => { const o = ORNEKLER.find(x => x.id === b.dataset.id); return !!o && S.age === o.yas && esit(S.eye.R, o.rx.R) && esit(S.eye.L, o.rx.L); });
+  const ak = aktifOrnek();
+  if (document.activeElement !== ornekSel) ornekSel.value = ak ? ak.id : "";
+  $("#ornekAc").innerHTML = ak ? `<span class="fw-semibold text-body">${ak.ad}:</span> ${ak.ac}.` : "Şu an kendi girdiğiniz değerler kullanılıyor. Listeden hazır bir örnek seçebilirsiniz.";
   $$(".sayfa").forEach(s => s.classList.toggle("on", s.id === "s-" + S.sekme));
   $("#tuval").classList.toggle("kars", S.kars);
   $$("[data-tani]").forEach(el => { el.textContent = buyukBas(sinifla(S.eye[el.dataset.tani]).tip); });
@@ -1336,7 +1235,7 @@ function etiketler() {
   }
   let h = "";
   for (const g of (S.kars ? [false, true] : [S.gozluk])) {
-    if (S.kars) h += `<div class="oz-grup"><svg class="ik"><use href="#i-${g ? "glasses" : "eye"}"/></svg>${g ? "Gözlüklü" : "Gözlüksüz"}</div>`;
+    if (S.kars) h += `<div class="oz-grup"><i class="bi bi-${g ? "eyeglasses" : "eye"} me-1"></i>${g ? "Gözlüklü" : "Gözlüksüz"}</div>`;
     for (const k of (S.goz === "B" ? ["R", "L"] : [S.goz])) h += gozOzet(durum(k, g, S.d), !S.kars);
     if (S.goz === "B") {
       const va = binokulerVA(durum("R", g, S.d), durum("L", g, S.d)), s = vaSinif(va)[0];
@@ -1355,43 +1254,36 @@ function guncelle(t) {
   if (S.sahne !== "kamera") iste(t);
 }
 function raporHTML() {
-  return `<div class="kart rapor od">${gozMetni("R")}</div><div class="kart rapor os">${gozMetni("L")}</div>` +
-    `<div class="kart rapor">${iki_gozMetni()}</div><div class="kart rapor">${tabloMetni()}</div>`;
+  return `<div class="card card-body mb-3 rapor kart-od">${gozMetni("R")}</div><div class="card card-body mb-3 rapor kart-os">${gozMetni("L")}</div>` +
+    `<div class="card card-body mb-3 rapor">${iki_gozMetni()}</div><div class="card card-body mb-3 rapor">${tabloMetni()}</div>`;
 }
 const eskiSekme = $("#sekmeler");
 eskiSekme.addEventListener("click", () => { if (S.sekme === "aciklama") $("#aciklama").innerHTML = raporHTML(); });
 
 /* ========================= tema · rehber ========================= */
-const temaMQ = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-const temaEtkin = () => document.documentElement.getAttribute("data-theme") || (temaMQ && temaMQ.matches ? "dark" : "light");
-function temaIkon() {
-  const u = $("#temaDug use"), id = temaEtkin() === "dark" ? "#i-sun" : "#i-moon";
-  u.setAttribute("href", id); u.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", id);
-}
+const temaEtkin = () => (document.documentElement.getAttribute("data-bs-theme") === "light" ? "light" : "dark");
+function temaIkon() { $("#temaDug i").className = "bi " + (temaEtkin() === "dark" ? "bi-sun" : "bi-moon-stars"); }
 $("#temaDug").addEventListener("click", () => {
   const yeni = temaEtkin() === "dark" ? "light" : "dark";
-  document.documentElement.setAttribute("data-theme", yeni);
+  document.documentElement.setAttribute("data-bs-theme", yeni);
   try { localStorage.setItem("gozsim_tema", yeni); } catch (e) {}
   temaIkon();
 });
-if (temaMQ && temaMQ.addEventListener) temaMQ.addEventListener("change", temaIkon);
 temaIkon();
 
 const rehber = $("#rehber");
 try { if (localStorage.getItem("gozsim_rehber") === "1") rehber.classList.add("gizli"); } catch (e) {}
-function rehberKapat() { rehber.classList.add("gizli"); try { localStorage.setItem("gozsim_rehber", "1"); } catch (e) {} }
-$("#rehberTamam").addEventListener("click", rehberKapat);
-$("#rehberKapat").addEventListener("click", rehberKapat);
+$("#rehberKapat").addEventListener("click", () => { rehber.classList.add("gizli"); try { localStorage.setItem("gozsim_rehber", "1"); } catch (e) {} });
 $("#yardimDug").addEventListener("click", () => { rehber.classList.remove("gizli"); rehber.scrollIntoView({ behavior: "smooth", block: "start" }); });
 
 /* telefonda yapışkan görüntünün yüksekliği (kaydırma payı için) */
 function yapiskan() { document.documentElement.style.setProperty("--yapiskan", $("#sahneKap").offsetHeight + "px"); }
 
 window.addEventListener("resize", () => { yapiskan(); iste(); });
+if (window.ResizeObserver) new ResizeObserver(() => iste()).observe($("#tuval"));
 try { glKur(); } catch (e) { $("#glHata").style.display = "grid"; $("#glHata").textContent = "Grafik hatası: " + e.message; console.error(e); }
 sahneYenile();
 yapiskan();
-if ($(".ornek.ek.on")) ornekAcik(true);
 </script>
 </body>
 </html>
